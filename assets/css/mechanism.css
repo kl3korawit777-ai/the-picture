@@ -1,0 +1,74 @@
+/* The Picture — CRISPR-Cas9 mechanism diagram. Behaviour: assets/js/mechanism.js (builds everything inside <div data-mech>).
+   Colours come from tokens in style.css :root (--amber*, --target-fill, --cas9-fill, --helix-rung ...).
+   The movement (sliding, fading) is limited to @media (prefers-reduced-motion: no-preference); otherwise a step just changes the picture.
+   The text in the diagram is sized in the SVG's own units (the picture is scaled to the page width), so on a phone it is made larger
+   in the second block below to stay readable. */
+
+[data-mech]:empty { min-height: 520px; }                       /* room for the diagram until it is built */
+.prose .mech { margin-top: 24px; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; font-size: 16px; }
+.mech-stage { background: var(--tint); padding: 12px 8px 4px; }
+.mech svg { width: 100%; height: auto; display: block; }
+.mech text { font-family: var(--font-body); font-size: 18px; font-weight: 600; fill: var(--ink-2); }
+.mech .strand { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+.mech .tick { stroke: var(--helix-rung); stroke-width: 3; stroke-linecap: round; }
+.mech .target { fill: var(--target-fill); }
+.mech .pam { fill: var(--amber-soft); }
+.mech .pam-label { fill: var(--amber-ink); }
+.mech .cas9 ellipse { fill: var(--cas9-fill); stroke: var(--accent); stroke-width: 2.5; }
+.mech .cas9 .grna { stroke: var(--amber); stroke-width: 4; stroke-linecap: round; fill: none; }
+.mech .cas9 text { fill: var(--accent); }
+.mech .cas9 text.small { font-size: 14px; }
+.mech .cutmark line { stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 5 5; }
+.mech .cutmark text { fill: var(--accent); }
+.mech .indel circle { fill: var(--amber); }
+.mech .indel text { fill: var(--amber-ink); }
+.mech .template line { stroke: var(--accent); stroke-width: 4; stroke-dasharray: 8 6; stroke-linecap: round; }
+.mech .template .patch { fill: var(--accent); opacity: .55; }
+.mech .template text { fill: var(--accent); }
+
+/* what each step shows */
+.mech .cutmark, .mech .indel, .mech .template { opacity: 0; }
+.mech[data-step="1"] .cas9, .mech[data-step="2"] .cas9 { transform: translateX(243px); }
+.mech[data-step="3"] .cas9 { transform: translate(243px, -36px); opacity: 0; }
+.mech[data-step="2"] .dna-left { transform: translateX(-12px); }
+.mech[data-step="2"] .dna-right { transform: translateX(12px); }
+.mech[data-step="2"] .cutmark { opacity: 1; }
+.mech[data-step="3"][data-repair="nhej"] .indel { opacity: 1; }
+.mech[data-step="3"][data-repair="hdr"] .template { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .mech g { transition: transform 1s cubic-bezier(.5, 0, .2, 1), opacity .6s ease; }
+}
+
+/* on a phone the picture is scaled down to about half size: bigger lettering keeps it readable (labels are placed so they do not collide) */
+@media (max-width: 600px) {
+  .mech text { font-size: 26px; }
+  .mech .cas9 text.small { font-size: 24px; }
+}
+
+.mech-controls { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.mech-caption { margin: 0; font-size: 15px; line-height: 1.7; color: var(--ink-2); min-height: 3.4em; }
+.mech-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.mech-steps button { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; border: 0; background: transparent; padding: 10px 12px; border-radius: 12px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
+.mech-steps button:hover { background: var(--surface); }
+.mech-steps button[aria-pressed="true"] { background: var(--tint); color: var(--ink); }
+.mech-steps .n { flex: none; width: 30px; height: 30px; border-radius: 999px; background: var(--surface); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+.mech-steps button[aria-pressed="true"] .n { background: var(--accent); color: var(--accent-ink); }
+.mech-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 12px; }
+.mech-seg { display: flex; padding: 3px; border-radius: 999px; background: var(--surface); }
+.mech-seg button { border: 0; background: transparent; border-radius: 999px; padding: 6px 16px; min-height: 38px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.mech-seg button[aria-pressed="true"] { background: var(--bg); color: var(--ink); box-shadow: 0 0 0 1px var(--line-2); }
+.mech-actions { display: flex; gap: 8px; }
+
+/* the two cards under the diagram */
+.repair-card { display: block; width: 100%; text-align: left; border: 0; background: var(--surface); border-radius: 18px; padding: 22px; font: inherit; color: inherit; cursor: pointer; }
+.repair-card:hover { background: var(--tint); }
+.repair-card[aria-pressed="true"] { background: var(--tint); box-shadow: inset 0 0 0 2px var(--accent); }
+.repair-card .label { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+.repair-card p { margin-top: 6px; font-size: 16px; line-height: 1.7; color: var(--ink-2); }
+.repair-card .hint { display: block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--accent); }
+.prose .mech-cards { margin-top: 16px; }
+
+@media print {
+  .mech-bar, .repair-card .hint { display: none !important; }
+  .mech, .repair-card { break-inside: avoid; }
+}

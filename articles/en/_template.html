@@ -1,0 +1,233 @@
+<!doctype html>
+<!--
+  เทมเพลตบทความฉบับภาษาอังกฤษ — ห้ามลบไฟล์นี้ ให้คัดลอกไปใช้ทุกครั้ง
+
+  วิธีใช้ (ละเอียดใน README หัวข้อ "บทความภาษาอังกฤษ")
+  1. ต้องมีบทความภาษาไทยก่อน (articles/<slug>.html และรายการใน data/articles.json)
+  2. คัดลอกไฟล์นี้เป็น articles/en/<slug>.html  (ชื่อไฟล์ = slug เดียวกับฉบับไทย)
+  3. ใส่ slug ที่ <html data-slug="...">  และเขียนเนื้อหาภาษาอังกฤษแทนข้อความใน [ ]
+  4. ใน data/articles.json ของบทความนี้ ตั้ง "has_en": true  (และใส่ title_en / dek_en ถ้าต้องการให้หน้ารายการแสดงชื่อภาษาอังกฤษ)
+  5. ใน <head> ของฉบับไทย ให้เปิดบล็อก hreflang ที่คอมเมนต์ไว้ (ดูในเทมเพลตภาษาไทย) ให้ตรงกับไฟล์นี้
+  ไฟล์นี้ใช้ <html lang="en"> เสมอ ห้ามเปลี่ยน — ระบบใช้ค่านี้บอกว่าเป็นหน้าภาษาอังกฤษ
+
+  สิ่งที่ไม่ต้องทำเอง: สารบัญ เวลาอ่าน วันที่ (ค.ศ.) หมวด ปุ่มก่อนหน้า/ถัดไป บทความในหมวดเดียวกัน
+  ข้อความเมนู ปุ่ม และส่วนท้ายเป็นภาษาอังกฤษให้อัตโนมัติจาก data/i18n.json
+  ปุ่ม TH บนหน้านี้พาไปฉบับไทย (articles/<slug>.html)
+-->
+<html lang="en" data-base="../../" data-slug="[slug]">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- TEMPLATE-ONLY: this file is a template, not an article. Remove this robots line in the real article. -->
+<meta name="robots" content="noindex">
+<!-- [edit] short title · The Picture -->
+<title>[Title] · The Picture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- [edit] one or two sentences (same text as dek_en in data/articles.json) -->
+<meta name="description" content="[Description]">
+
+<!--
+  Language alternates (hreflang) — absolute URLs starting with https://
+  [URL เว็บ] = the real site address on GitHub Pages, no trailing slash, e.g. https://<user>.github.io/<repo>
+  x-default points to the Thai file because Thai is the site's default language.
+-->
+<link rel="alternate" hreflang="th" href="[URL เว็บ]/articles/[slug].html">
+<link rel="alternate" hreflang="en" href="[URL เว็บ]/articles/en/[slug].html">
+<link rel="alternate" hreflang="x-default" href="[URL เว็บ]/articles/[slug].html">
+
+<!--
+  Link sharing (Open Graph / Twitter) — absolute URLs. Cover image: about 1200x630, .jpg or .png (not .svg).
+  No cover image: delete the og:image and twitter:image lines and change twitter:card to summary.
+-->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Picture">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="th_TH">
+<meta property="og:title" content="[Full title]">
+<meta property="og:description" content="[Description]">
+<meta property="og:url" content="[URL เว็บ]/articles/en/[slug].html">
+<meta property="og:image" content="[URL เว็บ]/[cover image path]">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="[Full title]">
+<meta name="twitter:description" content="[Description]">
+<meta name="twitter:image" content="[URL เว็บ]/[cover image path]">
+
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- fonts load without blocking the first paint (display=swap shows text in a system font meanwhile) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap"></noscript>
+<!-- the data files main.js needs start downloading now instead of after the script has loaded -->
+<link rel="preload" href="../../data/i18n.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../../data/site.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../../data/articles.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../../data/projects.json" as="fetch" crossorigin="anonymous">
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/interactive.css">
+<link rel="stylesheet" href="../../assets/css/covers.css">
+<link rel="stylesheet" href="../../assets/css/glossary.css">
+<link rel="stylesheet" href="../../assets/css/mechanism.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header">
+<div class="container">
+<a class="logo" href="../../index.html" aria-label="The Picture home" data-i18n-aria="aria.home"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
+<nav class="main-nav" id="main-nav" aria-label="Main menu" data-i18n-aria="aria.mainNav">
+<a href="../../index.html" aria-current="page" data-i18n="nav.articles">Articles</a>
+<a href="../../projects.html" data-i18n="nav.projects">Projects</a>
+<a href="../../portfolio.html" data-i18n="nav.portfolio">Portfolio</a>
+<a href="../../about.html" data-i18n="nav.about">About</a>
+</nav>
+<div class="header-tools">
+<div class="lang-switch" role="group" aria-label="Language" data-i18n-aria="aria.language"><button type="button" data-lang="th" aria-pressed="false">TH</button><button type="button" data-lang="en" aria-pressed="true">EN</button></div>
+<button type="button" class="icon-btn" data-search-open aria-label="Search" data-i18n-aria="aria.search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+<button type="button" class="icon-btn menu-btn" aria-label="Menu" aria-controls="main-nav" aria-expanded="false" data-i18n-aria="aria.menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+</div>
+</header>
+<div class="en-notice" hidden><div class="container" data-i18n="notice.article">This article is only available in Thai for now.</div></div>
+
+<main id="main" class="container page-main">
+
+<div class="article-head">
+<a class="back-link" href="../../index.html" data-i18n="art.back">← Back to all articles</a>
+<nav class="crumbs" aria-label="Breadcrumb" data-i18n-aria="aria.breadcrumb"><a href="../../index.html" data-i18n="nav.articles">Articles</a><span aria-hidden="true">/</span><!-- category name is filled in from data/articles.json --><span class="here" data-article-cat>[Category]</span></nav>
+<!-- [edit] full title -->
+<h1>[Full title]</h1>
+<!-- [edit] dek (one or two sentences) -->
+<p class="article-dek">[Dek]</p>
+<div class="meta-bar">
+<!-- the date (Gregorian here) and reading time are filled in automatically -->
+<div class="byline"><span class="avatar" aria-hidden="true" data-site="initials">กบ</span><span class="who"><span class="name" data-site="name">กรวิชญ์ บัวดำ</span><span class="when"><span data-article-date></span><span data-when-sep aria-hidden="true" hidden> · </span><span data-read-time></span></span></span></div>
+<div class="meta-actions">
+<button type="button" class="icon-btn" data-copy-link aria-label="Copy link" data-i18n-aria="aria.copyLink"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button>
+<button type="button" class="icon-btn" data-share aria-label="Share" data-i18n-aria="aria.share"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/></svg></button>
+</div>
+</div>
+</div>
+
+<!--
+  Cover: nothing to edit here. The cover slider is built from this article's "covers" list in data/articles.json
+  (helix, fold or image; image files go in assets/img/covers/). See README, "ภาพปกแบบสไลด์".
+  The DNA helix below is the fallback shown if the data cannot be loaded. Keep it. The caption and credit under the picture are written by covers.js.
+-->
+<figure class="cover" data-cover>
+<div class="helix">
+<svg viewBox="0 0 900 386" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke-linecap="round">
+<g class="rung" stroke-width="3">
+<line x1="56" y1="140" x2="56" y2="246"/><line x1="112" y1="113" x2="112" y2="273"/><line x1="168" y1="140" x2="168" y2="246"/>
+<line x1="281" y1="140" x2="281" y2="246"/><line x1="337" y1="113" x2="337" y2="273"/><line x1="393" y1="140" x2="393" y2="246"/>
+<line x1="506" y1="140" x2="506" y2="246"/><line x1="562" y1="113" x2="562" y2="273"/><line x1="618" y1="140" x2="618" y2="246"/>
+<line x1="731" y1="140" x2="731" y2="246"/><line x1="787" y1="113" x2="787" y2="273"/><line x1="843" y1="140" x2="843" y2="246"/>
+</g>
+<path class="strand-a" d="M0 193 C56 103 168 103 225 193 S393 283 450 193 S618 103 675 193 S843 283 900 193" stroke-width="7"/>
+<path class="strand-b" d="M0 193 C56 283 168 283 225 193 S393 103 450 193 S618 283 675 193 S843 103 900 193" stroke-width="7"/>
+</svg>
+</div>
+</figure>
+
+<div class="article-layout">
+
+<aside class="toc" aria-label="Table of contents" data-i18n-aria="aria.toc">
+<span class="kicker" data-i18n="art.toc">In this article</span>
+<ol><!-- built automatically from the h2/h3 headings in .prose --></ol>
+</aside>
+
+<article class="prose">
+
+<!--
+  Structure: h2 = main section, h3 = subsection (both appear in the table of contents). Do not skip levels or use h1 in the body.
+  Ready-made parts (see crispr-alphafold.html for real examples): .duo cards, <blockquote class="pull">,
+  <div class="table-wrap"><table>…</table></div>, <ol class="steps">…</ol>
+-->
+<!--
+  Article components (real examples in crispr-alphafold.html; details in README, "คอมโพเนนต์ในบทความ")
+
+  1) Glossary term: a word with an explanation box on hover/focus (tap to pin on a phone; tap outside or Esc to close)
+       <button type="button" class="term" data-term="pam">PAM</button>
+     data-term must match a "key" in data/glossary.json, where the explanation is written (term, definition, optional term_en, definition_en).
+     Existing keys: hgp, grna, pam, offtarget.
+
+  2) CRISPR-Cas9 mechanism diagram (Cas9 slides to the PAM, cuts both strands, repair by NHEJ or HDR, play / start over)
+       <div data-mech></div>
+     One empty div is all you write; the script builds the diagram, steps, buttons and the NHEJ / HDR cards. The step sentences live in data/mechanism.json.
+-->
+<h2>[First section, e.g. Introduction]</h2>
+<p>[Body text]</p>
+<p>[Body text]</p>
+
+<h2>[Main section]</h2>
+<p>[Body text]</p>
+
+<h3>[Subsection]</h3>
+<p>[Body text]</p>
+
+<!--
+  Images in the body need all four: alt (what the image shows), width/height (real file size), loading="lazy",
+  and a figcaption with the caption and credit.
+-->
+<figure class="figure">
+<img src="../../assets/img/[file].webp" alt="[describe the image]" width="[width]" height="[height]" loading="lazy">
+<figcaption>[Caption]<span class="credit">Image: [creator / source]</span></figcaption>
+</figure>
+
+<figure class="figure">
+<div class="ph">[Image placeholder]</div>
+<figcaption>[Caption]<span class="credit">Image: [source]</span></figcaption>
+</figure>
+
+<section class="refs" aria-labelledby="refs-h">
+<h2 id="refs-h" data-i18n="art.refs">References</h2>
+<ol><li>[Reference 1]</li><li>[Reference 2]</li></ol>
+</section>
+
+<div class="author-card">
+<span class="avatar" aria-hidden="true" data-site="initials">กบ</span>
+<div><div class="name" data-site="name">กรวิชญ์ บัวดำ</div><div class="bio">[Short author bio]</div></div>
+</div>
+
+</article>
+</div>
+
+<!-- previous/next and same-category list are filled in automatically; they hide themselves when empty. Do not remove. -->
+<nav class="post-nav" data-post-nav hidden aria-label="Previous and next article" data-i18n-aria="aria.postNav"></nav>
+
+<section class="related" data-related hidden aria-labelledby="rel-h">
+<h2 id="rel-h" data-i18n="art.related">More in this category</h2>
+<div class="related-grid" data-related-list></div>
+</section>
+</main>
+
+<footer class="site-footer">
+<div class="container">
+<a class="logo" href="../../index.html"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
+<small>© <span data-year>2026</span> <span data-site="name">กรวิชญ์ บัวดำ</span></small>
+</div>
+</footer>
+
+<div class="search-layer" hidden role="dialog" aria-modal="true" aria-label="Search" data-i18n-aria="aria.search">
+<div class="search-box">
+<div class="field">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+<input id="search-input" type="search" autocomplete="off" placeholder="Search articles and projects" data-i18n-ph="search.ph" aria-label="Search" data-i18n-aria="aria.search">
+<button type="button" class="icon-btn" data-search-close aria-label="Close" data-i18n-aria="aria.close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+<ul class="search-results"></ul>
+</div>
+</div>
+
+<button type="button" class="to-top" hidden aria-label="Back to top" data-i18n-aria="aria.toTop"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path class="arrow" d="M24 31V17M18 23l6-6 6 6"/></svg></button>
+
+<script src="../../assets/js/covers.js"></script>
+<script src="../../assets/js/glossary.js"></script>
+<script src="../../assets/js/mechanism.js"></script>
+<script src="../../assets/js/main.js"></script>
+<script src="../../assets/js/interactive.js"></script>
+</body>
+</html>

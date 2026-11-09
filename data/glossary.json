@@ -1,0 +1,30 @@
+[
+  {
+    "key": "hgp",
+    "term": "Human Genome Project",
+    "term_en": "",
+    "definition": "โครงการนานาชาติที่ถอดรหัสลำดับเบสในจีโนมมนุษย์ ดำเนินการระหว่างปี ค.ศ. 1990 ถึง 2003",
+    "definition_en": ""
+  },
+  {
+    "key": "grna",
+    "term": "guide RNA (gRNA)",
+    "term_en": "",
+    "definition": "RNA สายสั้นที่ออกแบบให้ลำดับเบสตรงกับ DNA เป้าหมาย ทำหน้าที่นำ Cas9 ไปยังตำแหน่งที่ต้องการ",
+    "definition_en": ""
+  },
+  {
+    "key": "pam",
+    "term": "PAM",
+    "term_en": "",
+    "definition": "ลำดับเบสสั้น ๆ ถัดจากตำแหน่งเป้าหมาย ที่ Cas9 ต้องพบก่อนจึงจะตัด สำหรับ Cas9 ที่ใช้กันทั่วไปคือลำดับ NGG",
+    "definition_en": ""
+  },
+  {
+    "key": "offtarget",
+    "term": "off-target",
+    "term_en": "",
+    "definition": "การที่ Cas9 ตัด DNA ผิดตำแหน่ง เพราะลำดับเบสตรงนั้นคล้ายกับเป้าหมาย",
+    "definition_en": ""
+  }
+]

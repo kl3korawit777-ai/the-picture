@@ -1,0 +1,86 @@
+/* The Picture — interactive layer (optional motion and small conveniences)
+   Loaded after style.css on every page; behaviour is in assets/js/interactive.js.
+   Rules: colours and shadows come from the tokens in style.css :root, and every movement lives inside
+   @media (prefers-reduced-motion: no-preference), so nothing animates for people who asked for less motion.
+   The page works exactly the same if this file or interactive.js is missing. */
+
+/* ---------- page-to-page transitions (View Transitions API; browsers without it just navigate normally) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .28s; }
+  .site-header { view-transition-name: site-header; }   /* the header stays put instead of cross-fading */
+}
+
+/* ---------- header: shadow once scrolled; slides away while reading down, back on scroll up ---------- */
+.site-header.is-scrolled { box-shadow: var(--shadow-header); }
+.site-header.is-hidden { transform: translateY(-100%); }
+@media (prefers-reduced-motion: no-preference) {
+  .site-header { transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .3s; }
+}
+
+/* ---------- reveal on scroll (only things below the first screen get .reveal-pre) ---------- */
+.reveal-pre { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-in { animation: tp-rise .6s cubic-bezier(.2, .7, .2, 1) backwards; animation-delay: var(--d, 0ms); }
+  @keyframes tp-rise { from { opacity: 0; transform: translateY(18px); } }
+
+  /* items that come back after a filter */
+  .pop { animation: tp-pop .35s ease backwards; }
+  @keyframes tp-pop { from { opacity: 0; transform: scale(.97); } }
+}
+
+/* ---------- cards: lift on hover/focus + a soft light that follows the mouse ---------- */
+.proj-card, .work-card, .cat-card, .exp-card { position: relative; }
+@media (prefers-reduced-motion: no-preference) {
+  .work-card, .cat-card, .exp-card { transition: border-color .2s, transform .2s, box-shadow .2s; }
+  .proj-card:hover, .work-card:hover, .cat-card:hover, .exp-card:hover,
+  .proj-card:focus-within, .work-card:focus-within, .cat-card:focus-visible, .exp-card:focus-within { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .proj-card::after, .work-card::after, .cat-card::after, .exp-card::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), var(--accent-soft), transparent 65%);
+  }
+  .proj-card:hover::after, .work-card:hover::after, .cat-card:hover::after, .exp-card:hover::after { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* style.css also lifts .proj-card a little on hover; keep cards still for people who asked for less motion */
+  .proj-card:hover, .work-card:hover, .cat-card:hover, .exp-card:hover { transform: none; }
+}
+
+/* ---------- headline of the featured article: underline grows on hover and keyboard focus ---------- */
+.lead h1 a {
+  background-image: linear-gradient(var(--accent), var(--accent)); background-size: 0 3px; background-repeat: no-repeat; background-position: 0 100%;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.lead h1 a:hover, .lead h1 a:focus-visible { background-size: 100% 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  .lead h1 a { transition: background-size .45s cubic-bezier(.2, .7, .2, 1), color .2s; }
+}
+
+/* ---------- about: the "now" step has a ripple ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .path li.now .dot { position: relative; }
+  .path li.now .dot::after { content: ""; position: absolute; inset: -6px; border-radius: 999px; border: 2px solid var(--accent); animation: tp-pulse 2.2s ease-out infinite; }
+  @keyframes tp-pulse { from { transform: scale(.6); opacity: .8; } to { transform: scale(1.7); opacity: 0; } }
+}
+
+/* ---------- back to top, with a ring that fills as you read ---------- */
+.to-top {
+  position: fixed; right: calc(env(safe-area-inset-right, 0px) + 20px); bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); z-index: 35;
+  width: 52px; height: 52px; padding: 0; border: 0; border-radius: 999px; background: var(--bg); box-shadow: var(--shadow-float);
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.to-top svg { width: 48px; height: 48px; transform: rotate(-90deg); }
+.to-top .ring-bg { fill: none; stroke: var(--line); stroke-width: 3; }
+.to-top .ring { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 132; stroke-dashoffset: 132; }
+.to-top .arrow { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transform: rotate(90deg); transform-origin: 24px 24px; }
+.to-top:hover .arrow { stroke: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .to-top { animation: tp-pop .25s ease backwards; }
+}
+main:focus { outline: none; }   /* main only receives focus from the back-to-top button, so it needs no outline */
+
+@media print {
+  .to-top { display: none !important; }
+  .reveal-pre { opacity: 1 !important; }
+  .site-header.is-hidden { transform: none; }
+}

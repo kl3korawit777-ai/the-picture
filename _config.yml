@@ -1,0 +1,6 @@
+# GitHub Pages builds the site with Jekyll by default. These files belong to the repository only, not to the website.
+# (Files and folders whose names start with an underscore, such as articles/_template.html, are also left out of the site by Jekyll.)
+exclude:
+  - CLAUDE.md
+  - README.md
+  - scripts

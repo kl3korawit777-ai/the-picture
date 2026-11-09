@@ -1,0 +1,46 @@
+/* The Picture — certificates (cards, the moving strip). Behaviour: assets/js/certificates.js.
+   Loaded after style.css on the portfolio page only. Colours come from tokens in style.css :root.
+   Every movement is inside @media (prefers-reduced-motion: no-preference); with reduced motion the strip is a row you scroll yourself. */
+
+/* a certificate card (used in the plain grid and inside the strip) */
+.cert { margin: 0; min-width: 0; }
+.cert .ph { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 16px; font-size: 14px; background: var(--bg); }
+.cert .ph.has-img { background: var(--surface); }
+.cert .ph.has-img img { object-fit: contain; }
+.cert figcaption { margin-top: 10px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.cert .cert-title { display: block; font-weight: 500; color: var(--ink-2); }
+.cert .cert-year { display: block; }
+
+/* the strip */
+.marquee-wrap { position: relative; }
+.marquee {
+  position: relative; overflow: hidden; padding-block: 6px 10px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--ink) 6%, var(--ink) 94%, transparent);   /* soft left and right edges (only the alpha matters) */
+  mask-image: linear-gradient(90deg, transparent, var(--ink) 6%, var(--ink) 94%, transparent);
+}
+.marquee-track { display: flex; gap: 16px; width: max-content; }
+.marquee-track .cert { flex: none; width: 280px; }
+@media (max-width: 480px) { .marquee-track .cert { width: 230px; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee.is-moving .marquee-track { animation: tp-marquee var(--dur, 40s) linear infinite; }
+  /* stops on hover, on keyboard focus, with the button, and while it is off screen */
+  .marquee:hover .marquee-track, .marquee:focus-within .marquee-track, .marquee.is-paused .marquee-track, .marquee.is-offscreen .marquee-track { animation-play-state: paused; }
+  @keyframes tp-marquee { to { transform: translateX(calc(var(--dist) * -1)); } }
+  .cert { transition: transform .25s; }
+  .cert:hover { transform: translateY(-4px); }
+}
+
+/* reduced motion: a row to swipe or scroll yourself */
+@media (prefers-reduced-motion: reduce) {
+  .marquee.is-scroll { overflow-x: auto; -webkit-mask-image: none; mask-image: none; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+  .marquee.is-scroll .cert { scroll-snap-align: start; }
+}
+
+@media print {
+  /* on paper the strip is a plain wrapped grid and the hidden copies are dropped */
+  .marquee { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .marquee-track { width: auto; flex-wrap: wrap; animation: none !important; transform: none !important; }
+  .marquee-track .cert { width: 45mm; }
+  .cert[inert] { display: none !important; }
+}

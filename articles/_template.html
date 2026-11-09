@@ -1,0 +1,245 @@
+<!doctype html>
+<!--
+  เทมเพลตบทความ — ห้ามลบไฟล์นี้ ให้คัดลอกเป็นบทความใหม่ทุกครั้ง
+
+  วิธีใช้ (ละเอียดใน README หัวข้อ "เพิ่มบทความใหม่")
+  1. คัดลอกไฟล์นี้เป็น articles/<slug>.html  (ชื่อไฟล์ = slug ใน data/articles.json)
+  2. แก้ทุกจุดที่มีข้อความในวงเล็บ [ ] ให้เป็นข้อมูลจริง (ค้นหา "[" ในไฟล์เพื่อไล่ดูได้)
+  3. ใส่ slug เดียวกันที่ <html data-slug="...">
+  4. เพิ่มรายการใน data/articles.json (title, dek, category, date, cover, featured, status)
+  5. ก่อนเผยแพร่ ทำตาม checklist ใน README
+
+  สิ่งที่ "ไม่ต้อง" ทำเอง: สารบัญ, เวลาอ่าน, วันที่, ชื่อหมวดใน breadcrumb,
+  ปุ่มก่อนหน้า/ถัดไป และ "บทความในหมวดเดียวกัน" — main.js สร้างให้จาก h2/h3 และ data/articles.json
+  ไม่ต้องใส่ id ให้หัวข้อ (ถ้าอยากให้ลิงก์ตรงหัวข้อคงที่ ค่อยใส่ id เอง)
+-->
+<html lang="th" data-base="../" data-slug="[slug]">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- ไฟล์เทมเพลตนี้ไม่ใช่บทความ ลบบรรทัด robots นี้ออกในบทความจริง -->
+<meta name="robots" content="noindex">
+<!-- [แก้] ชื่อเรื่องสั้น · The Picture -->
+<title>[ชื่อเรื่อง] · The Picture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- [แก้] คำโปรยสั้นๆ 1-2 ประโยค (ใช้ข้อความเดียวกับ dek ใน data/articles.json) -->
+<meta name="description" content="[คำโปรย]">
+
+<!--
+  [แก้] แชร์ลิงก์ (Open Graph / Twitter) — ต้องเป็น URL เต็มที่เริ่มด้วย https://
+  [URL เว็บ] = ที่อยู่เว็บจริงบน GitHub Pages เช่น https://<ชื่อผู้ใช้>.github.io/<ชื่อ-repo> (ไม่มี / ท้าย)
+  รูปปกสำหรับแชร์: ขนาดแนะนำ 1200x630 ไฟล์ .jpg/.png (แพลตฟอร์มแชร์ไม่รองรับ .svg)
+  ตัวอย่างค่าจริง: https://example.github.io/the-picture/assets/img/organoid-cover.jpg
+  ไม่มีรูปปก: ลบบรรทัด og:image และ twitter:image ออก และเปลี่ยน twitter:card เป็น summary
+-->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Picture">
+<meta property="og:locale" content="th_TH">
+<meta property="og:title" content="[ชื่อเรื่องเต็ม]">
+<meta property="og:description" content="[คำโปรย]">
+<meta property="og:url" content="[URL เว็บ]/articles/[slug].html">
+<meta property="og:image" content="[URL เว็บ]/[path รูปปก]">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="[ชื่อเรื่องเต็ม]">
+<meta name="twitter:description" content="[คำโปรย]">
+<meta name="twitter:image" content="[URL เว็บ]/[path รูปปก]">
+
+<!--
+  hreflang — เปิดใช้ (ลบเครื่องหมายคอมเมนต์) ก็ต่อเมื่อมีฉบับภาษาอังกฤษแล้ว (articles/en/<slug>.html และ "has_en": true)
+  ต้องเป็น URL เต็ม  ฉบับอังกฤษต้องมีบล็อกคู่กัน (ดู articles/en/_template.html) ถ้ายังไม่มีฉบับอังกฤษ ไม่ต้องใส่อะไร
+  <link rel="alternate" hreflang="th" href="[URL เว็บ]/articles/[slug].html">
+  <link rel="alternate" hreflang="en" href="[URL เว็บ]/articles/en/[slug].html">
+  <link rel="alternate" hreflang="x-default" href="[URL เว็บ]/articles/[slug].html">
+-->
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- fonts load without blocking the first paint (display=swap shows text in a system font meanwhile) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap"></noscript>
+<!-- the data files main.js needs start downloading now instead of after the script has loaded -->
+<link rel="preload" href="../data/i18n.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../data/site.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../data/articles.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../data/projects.json" as="fetch" crossorigin="anonymous">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/interactive.css">
+<link rel="stylesheet" href="../assets/css/covers.css">
+<link rel="stylesheet" href="../assets/css/glossary.css">
+<link rel="stylesheet" href="../assets/css/mechanism.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="skip">ข้ามไปที่เนื้อหา</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="site-header">
+<div class="container">
+<a class="logo" href="../index.html" aria-label="The Picture หน้าแรก" data-i18n-aria="aria.home"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
+<nav class="main-nav" id="main-nav" aria-label="เมนูหลัก" data-i18n-aria="aria.mainNav">
+<a href="../index.html" aria-current="page" data-i18n="nav.articles">บทความ</a>
+<a href="../projects.html" data-i18n="nav.projects">โปรเจกต์</a>
+<a href="../portfolio.html" data-i18n="nav.portfolio">พอร์ตโฟลิโอ</a>
+<a href="../about.html" data-i18n="nav.about">เกี่ยวกับฉัน</a>
+</nav>
+<div class="header-tools">
+<div class="lang-switch" role="group" aria-label="ภาษา" data-i18n-aria="aria.language"><button type="button" data-lang="th" aria-pressed="true">TH</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+<button type="button" class="icon-btn" data-search-open aria-label="ค้นหา" data-i18n-aria="aria.search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+<button type="button" class="icon-btn menu-btn" aria-label="เมนู" data-i18n-aria="aria.menu" aria-controls="main-nav" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+</div>
+</header>
+<div class="en-notice" hidden><div class="container" data-i18n="notice.article">English is coming soon.</div></div>
+
+<main id="main" class="container page-main">
+
+<div class="article-head">
+<a class="back-link" href="../index.html" data-i18n="art.back">← กลับหน้าบทความทั้งหมด</a>
+<nav class="crumbs" aria-label="ตำแหน่งหน้า" data-i18n-aria="aria.breadcrumb"><a href="../index.html" data-i18n="nav.articles">บทความ</a><span aria-hidden="true">/</span><!-- ชื่อหมวดเติมอัตโนมัติจาก data/articles.json --><span class="here" data-article-cat>[หมวด]</span></nav>
+<!-- [แก้] ชื่อเรื่องเต็ม (ใช้ข้อความเดียวกับ title ใน data/articles.json) -->
+<h1>[ชื่อเรื่องเต็ม]</h1>
+<!-- [แก้] คำโปรย -->
+<p class="article-dek">[คำโปรย]</p>
+<div class="meta-bar">
+<!-- ชื่อผู้เขียนคงเดิม ส่วนวันที่และเวลาอ่านเติมอัตโนมัติ (วันที่มาจาก date ใน data/articles.json) -->
+<div class="byline"><span class="avatar" aria-hidden="true" data-site="initials">กบ</span><span class="who"><span class="name" data-site="name">กรวิชญ์ บัวดำ</span><span class="when"><span data-article-date></span><span data-when-sep aria-hidden="true" hidden> · </span><span data-read-time></span></span></span></div>
+<div class="meta-actions">
+<button type="button" class="icon-btn" data-copy-link aria-label="คัดลอกลิงก์" data-i18n-aria="aria.copyLink"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button>
+<button type="button" class="icon-btn" data-share aria-label="แชร์" data-i18n-aria="aria.share"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/></svg></button>
+</div>
+</div>
+</div>
+
+<!--
+  ภาพปก: ไม่ต้องแก้ตรงนี้ — สไลด์ภาพปกสร้างจากช่อง "covers" ของบทความนี้ใน data/articles.json
+  (helix = เกลียว DNA, fold = ภาพโปรตีนระบายสี pLDDT, image = รูปจริง ใส่ไฟล์ใน assets/img/covers/) ดูวิธีใน README หัวข้อ "ภาพปกแบบสไลด์"
+  ภาพเกลียว DNA ด้านล่างเป็นภาพสำรองที่แสดงเมื่อโหลดข้อมูลไม่ได้ ห้ามลบ ส่วนคำบรรยายและเครดิตใต้ภาพ covers.js เขียนให้เอง
+-->
+<figure class="cover" data-cover>
+<div class="helix">
+<svg viewBox="0 0 900 386" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke-linecap="round">
+<g class="rung" stroke-width="3">
+<line x1="56" y1="140" x2="56" y2="246"/><line x1="112" y1="113" x2="112" y2="273"/><line x1="168" y1="140" x2="168" y2="246"/>
+<line x1="281" y1="140" x2="281" y2="246"/><line x1="337" y1="113" x2="337" y2="273"/><line x1="393" y1="140" x2="393" y2="246"/>
+<line x1="506" y1="140" x2="506" y2="246"/><line x1="562" y1="113" x2="562" y2="273"/><line x1="618" y1="140" x2="618" y2="246"/>
+<line x1="731" y1="140" x2="731" y2="246"/><line x1="787" y1="113" x2="787" y2="273"/><line x1="843" y1="140" x2="843" y2="246"/>
+</g>
+<path class="strand-a" d="M0 193 C56 103 168 103 225 193 S393 283 450 193 S618 103 675 193 S843 283 900 193" stroke-width="7"/>
+<path class="strand-b" d="M0 193 C56 283 168 283 225 193 S393 103 450 193 S618 283 675 193 S843 103 900 193" stroke-width="7"/>
+</svg>
+</div>
+</figure>
+
+<div class="article-layout">
+
+<aside class="toc" aria-label="สารบัญ" data-i18n-aria="aria.toc">
+<span class="kicker" data-i18n="art.toc">ในบทความนี้</span>
+<ol><!-- สร้างอัตโนมัติจาก h2/h3 ใน .prose ไม่ต้องเขียนเอง --></ol>
+</aside>
+
+<article class="prose">
+
+<!--
+  โครงเนื้อหา: h2 = หัวข้อหลัก, h3 = หัวข้อย่อย (ทั้งคู่ขึ้นในสารบัญเอง)
+  อย่าข้ามระดับ (อย่าใช้ h3 ก่อนมี h2) และอย่าใช้ h1 ในเนื้อหา
+  ส่วนที่ทำไว้ให้ใช้ได้ (ดูตัวอย่างการใช้จริงใน crispr-alphafold.html):
+    <div class="duo"> ... </div>            การ์ดเปรียบเทียบสองช่อง (ใส่ class "filled" เพื่อพื้นเทา)
+    <blockquote class="pull">...</blockquote> ข้อความเด่น
+    <div class="table-wrap"><table>...</table></div> ตาราง (ครอบด้วย .table-wrap เสมอ เพื่อไม่ให้ล้นจอมือถือ)
+    <ol class="steps"><li><span class="n">1</span><span>...</span></li></ol> ขั้นตอน
+-->
+<!--
+  คอมโพเนนต์ที่ใช้ได้ในบทความ (ดูตัวอย่างจริงใน crispr-alphafold.html และรายละเอียดใน README หัวข้อ "คอมโพเนนต์ในบทความ")
+
+  1) คำศัพท์ — คำที่มีกล่องอธิบายตอน hover/โฟกัส (แตะค้างไว้บนมือถือ กดข้างนอกหรือ Esc เพื่อปิด)
+       <button type="button" class="term" data-term="pam">PAM</button>
+     data-term ต้องตรงกับ "key" ใน data/glossary.json  คำอธิบายเขียนที่ไฟล์นั้น ไม่ใช่ในบทความ
+     key ที่มีอยู่: hgp, grna, pam, offtarget   เพิ่มคำใหม่โดยเพิ่มรายการ { key, term, definition } (term_en, definition_en ไม่บังคับ)
+     ข้อความในปุ่มเป็นคำที่เขียนในประโยคได้ตามปกติ (ไม่ต้องตรงกับ term) ใช้กับคำแรกที่ปรากฏก็พอ
+
+  2) แผนภาพกลไก CRISPR-Cas9 (เลื่อนไปหา PAM, ตัด DNA สายคู่, ซ่อมแซมแบบ NHEJ/HDR, ปุ่มเล่น/เริ่มใหม่)
+       <div data-mech></div>
+     ใส่แค่ div ว่างอันเดียว JS สร้างแผนภาพ ขั้นตอน ปุ่ม และการ์ด NHEJ/HDR ใต้แผนภาพให้เอง
+     ข้อความอธิบายแต่ละขั้นอยู่ใน data/mechanism.json  ใส่ได้ครั้งเดียวต่อบทความก็เพียงพอ (ใส่หลายอันได้ แต่ละอันทำงานแยกกัน)
+-->
+<h2>[หัวข้อแรก เช่น บทนำ]</h2>
+<p>[เนื้อหา]</p>
+<p>[เนื้อหา]</p>
+
+<h2>[หัวข้อหลัก]</h2>
+<p>[เนื้อหา]</p>
+
+<h3>[หัวข้อย่อย]</h3>
+<p>[เนื้อหา]</p>
+
+<!--
+  รูปในเนื้อหา — ต้องมีครบ 4 อย่าง:
+    1. alt          อธิบายสิ่งที่เห็นในรูป (ไม่ใช่ชื่อไฟล์)
+    2. width/height ขนาดจริงของไฟล์ (กันหน้ากระตุกตอนรูปโหลด)
+    3. loading="lazy"
+    4. figcaption   คำบรรยาย + เครดิต (ผู้สร้าง/แหล่งที่มา/สัญญาอนุญาต ถ้ามีลิงก์ให้ใส่ <a>)
+  ถ้าเป็นภาพที่เขียนเอง ให้ใส่เครดิตว่า "ภาพ: กรวิชญ์ บัวดำ"
+-->
+<figure class="figure">
+<img src="../assets/img/[ไฟล์].jpg" alt="[อธิบายรูป]" width="[กว้าง]" height="[สูง]" loading="lazy">
+<figcaption>[คำบรรยายภาพ]<span class="credit">ภาพ: [ผู้สร้าง / แหล่งที่มา]</span></figcaption>
+</figure>
+
+<!-- ตัวอย่างช่องรูปที่ยังไม่มีภาพจริง (ลบทิ้งเมื่อใส่รูปแล้ว) -->
+<figure class="figure">
+<div class="ph">[ภาพประกอบ]</div>
+<figcaption>[คำบรรยายภาพ]<span class="credit">ภาพ: [แหล่งที่มา]</span></figcaption>
+</figure>
+
+<!-- แหล่งอ้างอิงอยู่ท้ายบทความเสมอ และไม่ขึ้นในสารบัญ -->
+<section class="refs" aria-labelledby="refs-h">
+<h2 id="refs-h" data-i18n="art.refs">แหล่งอ้างอิง</h2>
+<ol><li>[แหล่งอ้างอิง 1]</li><li>[แหล่งอ้างอิง 2]</li></ol>
+</section>
+
+<div class="author-card">
+<span class="avatar" aria-hidden="true" data-site="initials">กบ</span>
+<div><div class="name" data-site="name">กรวิชญ์ บัวดำ</div><div class="bio">นักเรียนโครงการ SMA โรงเรียนนาทวีวิทยาคม สนใจการแพทย์ เทคโนโลยีชีวภาพ และ Bioinformatics</div></div>
+</div>
+
+</article>
+</div>
+
+<!-- ปุ่มก่อนหน้า/ถัดไป และบทความในหมวดเดียวกัน: เติมอัตโนมัติ ถ้าไม่มีบทความอื่นจะซ่อนเอง ห้ามลบ -->
+<nav class="post-nav" data-post-nav hidden aria-label="บทความก่อนหน้าและถัดไป" data-i18n-aria="aria.postNav"></nav>
+
+<section class="related" data-related hidden aria-labelledby="rel-h">
+<h2 id="rel-h" data-i18n="art.related">บทความในหมวดเดียวกัน</h2>
+<div class="related-grid" data-related-list></div>
+</section>
+</main>
+
+<footer class="site-footer">
+<div class="container">
+<a class="logo" href="../index.html"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
+<small>© <span data-year>2569</span> <span data-site="name">กรวิชญ์ บัวดำ</span></small>
+</div>
+</footer>
+
+<div class="search-layer" hidden role="dialog" aria-modal="true" aria-label="ค้นหา" data-i18n-aria="aria.search">
+<div class="search-box">
+<div class="field">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+<input id="search-input" type="search" autocomplete="off" placeholder="ค้นหาบทความและโปรเจกต์" data-i18n-ph="search.ph" aria-label="ค้นหา" data-i18n-aria="aria.search">
+<button type="button" class="icon-btn" data-search-close aria-label="ปิด" data-i18n-aria="aria.close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+<ul class="search-results"></ul>
+</div>
+</div>
+
+<button type="button" class="to-top" hidden aria-label="กลับขึ้นด้านบน" data-i18n-aria="aria.toTop"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path class="arrow" d="M24 31V17M18 23l6-6 6 6"/></svg></button>
+
+<script src="../assets/js/covers.js"></script>
+<script src="../assets/js/glossary.js"></script>
+<script src="../assets/js/mechanism.js"></script>
+<script src="../assets/js/main.js"></script>
+<script src="../assets/js/interactive.js"></script>
+</body>
+</html>

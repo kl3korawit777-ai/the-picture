@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "nexus",
+    "name": "Nexus",
+    "desc_th": "รวบรวมชนิดเซลล์ทั้งหมดในร่างกายมนุษย์ พร้อมเครือข่ายเชื่อมโยงข้อมูลแบบใยแมงมุม",
+    "desc_en": "A catalogue of every human cell type, with a spider-web network linking the data.",
+    "types": ["website"],
+    "tags": ["Cell Biology"],
+    "url": "",
+    "github": "",
+    "thumb": "Nx"
+  },
+  {
+    "slug": "pharrex",
+    "name": "Pharrex",
+    "desc_th": "เว็บข้อมูลยาเพื่อการศึกษา สองภาษา ไทยและอังกฤษ",
+    "desc_en": "An educational drug-information website in Thai and English.",
+    "types": ["website"],
+    "tags": ["Pharmacology"],
+    "url": "",
+    "github": "",
+    "thumb": "Rx"
+  },
+  {
+    "slug": "durian-leaf-doctor",
+    "name": "หมอใบทุเรียน",
+    "desc_th": "เว็บแอปตรวจโรคใบทุเรียนจากภาพถ่าย ด้วยโมเดล Teachable Machine",
+    "desc_en": "A web app that detects durian leaf disease from a photo, using a Teachable Machine model.",
+    "types": ["ai", "webapp"],
+    "tags": [],
+    "url": "",
+    "github": "",
+    "thumb": "Dr"
+  },
+  {
+    "slug": "crispr-alphafold-course",
+    "name": "CRISPR × AlphaFold",
+    "desc_th": "หลักสูตรเรียนรู้ด้วยตัวเองและเว็บไซต์สอนเรื่อง CRISPR-Cas9 และ AlphaFold",
+    "desc_en": "A self-study course and teaching website on CRISPR-Cas9 and AlphaFold.",
+    "types": ["website"],
+    "tags": ["Biotech"],
+    "url": "",
+    "github": "",
+    "thumb": "Cx"
+  },
+  {
+    "slug": "lucian",
+    "name": "Lucian",
+    "desc_th": "ผู้ช่วย AI สั่งงานด้วยเสียงส่วนตัว สไตล์ JARVIS",
+    "desc_en": "A personal JARVIS-style voice assistant.",
+    "types": ["ai"],
+    "tags": ["Python"],
+    "url": "",
+    "github": "",
+    "thumb": "Lu"
+  },
+  {
+    "slug": "english-roadmap",
+    "name": "English Roadmap",
+    "desc_th": "เว็บแอปเรียนภาษาอังกฤษตามเส้นทาง A1 ถึง C1 พร้อมฝึก shadowing",
+    "desc_en": "A web app for learning English along an A1 to C1 roadmap, with shadowing practice.",
+    "types": ["webapp"],
+    "tags": ["Language"],
+    "url": "",
+    "github": "",
+    "thumb": "En"
+  }
+]

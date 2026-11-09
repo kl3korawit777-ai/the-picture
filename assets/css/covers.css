@@ -1,0 +1,72 @@
+/* The Picture — article cover slider (helix, protein fold, images). Behaviour: assets/js/covers.js.
+   Loaded after style.css on the home page and on article pages. Colours come from tokens in style.css :root
+   (--glass, --dot, --helix-rung, --plddt-*). Movement is limited to what the visitor allows: see the reduced-motion rules at the end. */
+
+.slider { position: relative; max-width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--tint-2); aspect-ratio: 16 / 9; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.slider.wide { aspect-ratio: 21 / 9; border-radius: 24px; }
+@media (max-width: 600px) {
+  .slider.wide, .cover .helix { aspect-ratio: 16 / 10; }     /* the plain helix inside .cover is the fallback shown before the slider is built: same size, so nothing jumps */
+}
+.slider.single { touch-action: auto; }
+
+.slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+.slide.is-active { opacity: 1; visibility: visible; }
+.slide > *, .slide-link > * { width: 100%; height: 100%; }
+.slide-link { display: block; width: 100%; height: 100%; -webkit-user-drag: none; }
+.slide-link:hover { color: inherit; }
+.slide .helix, .slide .fold, .slide .cover-image { aspect-ratio: auto; border-radius: 0; max-width: none; }
+.slide svg { display: block; width: 100%; height: 100%; }
+.slide .ph { border: 0; border-radius: 0; height: 100%; }
+.cover-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover figcaption .credit { display: block; margin-top: 2px; }
+
+/* DNA helix (drawn by covers.js) */
+.slide .helix { background: transparent; cursor: ew-resize; }
+.helix .rung-a { stroke: var(--accent); }
+.helix .rung-b { stroke: var(--helix-rung); }
+
+/* protein fold, coloured like AlphaFold's confidence scale */
+.fold { position: relative; background: var(--tint-2); }
+.fold .seg-o { stroke: var(--tint-2); }
+.fold .seg { opacity: 0; }
+.slide.is-active .fold .seg { opacity: 1; }
+.fold-legend { position: absolute; left: 14px; top: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; max-width: calc(100% - 28px); font-size: 12px; line-height: 1.5; font-weight: 500; color: var(--ink-2); background: var(--glass); padding: 6px 12px; border-radius: 18px; font-variant-numeric: tabular-nums; }
+.fold-legend b { font-weight: 600; color: var(--ink); }
+.fold-legend .lg-item { white-space: nowrap; }
+.fold-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+.fold-legend .lg-vh { background: var(--plddt-very-high); }
+.fold-legend .lg-c { background: var(--plddt-confident); }
+.fold-legend .lg-l { background: var(--plddt-low); }
+.fold-legend .lg-vl { background: var(--plddt-very-low); }
+
+/* arrows, dots, progress bar (only built when there is more than one cover) */
+.slider-btn { position: absolute; top: 50%; z-index: 3; width: 44px; height: 44px; margin-top: -22px; padding: 0; border-radius: 999px; border: 0; background: var(--glass); color: var(--ink); box-shadow: var(--shadow-btn); display: inline-flex; align-items: center; justify-content: center; opacity: 0; }
+.slider-btn.prev { left: 14px; }
+.slider-btn.next { right: 14px; }
+.slider:hover .slider-btn, .slider:focus-within .slider-btn { opacity: 1; }
+@media (hover: none) { .slider-btn { opacity: 1; width: 40px; height: 40px; margin-top: -20px; } }
+.slider-dots { position: absolute; right: 12px; bottom: 8px; z-index: 3; display: flex; gap: 2px; }
+.slider-dots button { width: 30px; height: 30px; border: 0; background: transparent; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.slider-dots span { display: block; width: 8px; height: 8px; border-radius: 999px; background: var(--dot); }
+.slider-dots button[aria-current="true"] span { width: 24px; background: var(--accent); }
+.slider-progress { position: absolute; left: 0; bottom: 0; z-index: 3; height: 3px; width: 0; background: var(--accent); }
+.slider-progress.run { animation: tp-progress 5s linear forwards; }
+@keyframes tp-progress { to { width: 100%; } }
+
+/* motion: fades, the fold drawing itself, button feedback */
+@media (prefers-reduced-motion: no-preference) {
+  .slide { transform: scale(1.03); transition: opacity .7s ease, transform 1.2s cubic-bezier(.2, .7, .2, 1), visibility 0s linear .7s; }
+  .slide.is-active { transform: none; transition: opacity .7s ease, transform 1.2s cubic-bezier(.2, .7, .2, 1); }
+  .fold .seg { transition: opacity .25s ease; }                /* each segment gets its own transition-delay from covers.js */
+  .slider-btn { transition: opacity .2s, transform .15s; }
+  .slider-btn:active { transform: scale(.92); }
+  .slider-dots span { transition: width .3s, background .3s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
+  .fold .seg { opacity: 1; transition: none; }                 /* the whole fold at once */
+  .slider-progress { display: none; }
+}
+@media print {
+  .slider-btn, .slider-dots, .slider-progress { display: none !important; }
+}

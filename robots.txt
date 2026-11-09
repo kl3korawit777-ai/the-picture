@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Sitemap line is added by scripts/prepare-deploy.py --url <site address>

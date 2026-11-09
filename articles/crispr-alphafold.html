@@ -1,54 +1,81 @@
 <!doctype html>
-<html lang="th" data-base="../">
+<html lang="th" data-base="../" data-slug="crispr-alphafold">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CRISPR และ AlphaFold · The Picture</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="หลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold">
+<!-- แชร์ลิงก์ (Open Graph / Twitter): ข้อความใน [ ] รอข้อมูลจริง ดูวิธีกรอกใน README หัวข้อ "ก่อนเผยแพร่" -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Picture">
+<meta property="og:locale" content="th_TH">
+<meta property="og:title" content="CRISPR และ AlphaFold เทคโนโลยีที่สามารถปฏิวัติวงการ Bio-Tech และการแพทย์">
+<meta property="og:description" content="หลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold">
+<meta property="og:url" content="[URL เว็บ]/articles/crispr-alphafold.html">
+<meta property="og:image" content="[URL เว็บ]/[path รูปปก 1200x630]">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CRISPR และ AlphaFold เทคโนโลยีที่สามารถปฏิวัติวงการ Bio-Tech และการแพทย์">
+<meta name="twitter:description" content="หลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold">
+<meta name="twitter:image" content="[URL เว็บ]/[path รูปปก 1200x630]">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<!-- fonts load without blocking the first paint (display=swap shows text in a system font meanwhile) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap"></noscript>
+<!-- the data files main.js needs start downloading now instead of after the script has loaded -->
+<link rel="preload" href="../data/i18n.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../data/site.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../data/articles.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="../data/projects.json" as="fetch" crossorigin="anonymous">
 <link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/interactive.css">
+<link rel="stylesheet" href="../assets/css/covers.css">
+<link rel="stylesheet" href="../assets/css/glossary.css">
+<link rel="stylesheet" href="../assets/css/mechanism.css">
 </head>
 <body>
+<a class="skip-link" href="#main" data-i18n="skip">ข้ามไปที่เนื้อหา</a>
 <div class="progress" aria-hidden="true"></div>
 
 <header class="site-header">
 <div class="container">
-<a class="logo" href="../index.html" aria-label="The Picture หน้าแรก"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
-<nav class="main-nav" id="main-nav" aria-label="เมนูหลัก">
+<a class="logo" href="../index.html" aria-label="The Picture หน้าแรก" data-i18n-aria="aria.home"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
+<nav class="main-nav" id="main-nav" aria-label="เมนูหลัก" data-i18n-aria="aria.mainNav">
 <a href="../index.html" aria-current="page" data-i18n="nav.articles">บทความ</a>
 <a href="../projects.html" data-i18n="nav.projects">โปรเจกต์</a>
 <a href="../portfolio.html" data-i18n="nav.portfolio">พอร์ตโฟลิโอ</a>
 <a href="../about.html" data-i18n="nav.about">เกี่ยวกับฉัน</a>
 </nav>
 <div class="header-tools">
-<div class="lang-switch" role="group" aria-label="ภาษา"><button type="button" data-lang="th" aria-pressed="true">TH</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
-<button type="button" class="icon-btn" data-search-open aria-label="ค้นหา"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-<button type="button" class="icon-btn menu-btn" aria-label="เมนู" aria-controls="main-nav" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<div class="lang-switch" role="group" aria-label="ภาษา" data-i18n-aria="aria.language"><button type="button" data-lang="th" aria-pressed="true">TH</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+<button type="button" class="icon-btn" data-search-open aria-label="ค้นหา" data-i18n-aria="aria.search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+<button type="button" class="icon-btn menu-btn" aria-label="เมนู" data-i18n-aria="aria.menu" aria-controls="main-nav" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </div>
 </div>
 </header>
-<div class="en-notice" hidden><div class="container" data-i18n="notice">English is coming soon.</div></div>
+<div class="en-notice" hidden><div class="container" data-i18n="notice.article">English is coming soon.</div></div>
 
-<main class="container page-main">
+<main id="main" class="container page-main">
 
 <div class="article-head">
 <a class="back-link" href="../index.html" data-i18n="art.back">← กลับหน้าบทความทั้งหมด</a>
-<nav class="crumbs" aria-label="ตำแหน่งหน้า"><a href="../index.html" data-i18n="nav.articles">บทความ</a><span aria-hidden="true">/</span><span class="here">Biotech</span></nav>
+<nav class="crumbs" aria-label="ตำแหน่งหน้า" data-i18n-aria="aria.breadcrumb"><a href="../index.html" data-i18n="nav.articles">บทความ</a><span aria-hidden="true">/</span><span class="here" data-article-cat>Biotech</span></nav>
 <h1>CRISPR และ AlphaFold เทคโนโลยีที่สามารถปฏิวัติวงการ Bio-Tech และการแพทย์</h1>
 <p class="article-dek">รายงานนี้อธิบายหลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold โดยอ้างอิงจากงานวิจัยและแหล่งข้อมูลที่เชื่อถือได้</p>
 <div class="meta-bar">
-<div class="byline"><span class="avatar" aria-hidden="true">กบ</span><span class="who"><span class="name">กรวิชญ์ บัวดำ</span><span class="when">[วันที่เผยแพร่] พฤศจิกายน 2569</span></span></div>
+<div class="byline"><span class="avatar" aria-hidden="true" data-site="initials">กบ</span><span class="who"><span class="name" data-site="name">กรวิชญ์ บัวดำ</span><span class="when"><span data-article-date></span><span data-when-sep aria-hidden="true" hidden> · </span><span data-read-time></span></span></span></div>
 <div class="meta-actions">
-<button type="button" class="icon-btn" data-copy-link aria-label="คัดลอกลิงก์"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button>
-<button type="button" class="icon-btn" data-share aria-label="แชร์"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/></svg></button>
+<button type="button" class="icon-btn" data-copy-link aria-label="คัดลอกลิงก์" data-i18n-aria="aria.copyLink"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button>
+<button type="button" class="icon-btn" data-share aria-label="แชร์" data-i18n-aria="aria.share"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/></svg></button>
 </div>
 </div>
 </div>
 
-<figure class="cover">
+<figure class="cover" data-cover>
 <div class="helix">
 <svg viewBox="0 0 900 386" preserveAspectRatio="xMidYMid slice" aria-hidden="true" fill="none" stroke-linecap="round">
 <g class="rung" stroke-width="3">
@@ -61,28 +88,20 @@
 <path class="strand-b" d="M0 193 C56 283 168 283 225 193 S393 103 450 193 S618 283 675 193 S843 103 900 193" stroke-width="7"/>
 </svg>
 </div>
-<figcaption>[ภาพปกบทความ]</figcaption>
 </figure>
 
 <div class="article-layout">
 
-<aside class="toc" aria-label="สารบัญ">
+<aside class="toc" aria-label="สารบัญ" data-i18n-aria="aria.toc">
 <span class="kicker" data-i18n="art.toc">ในบทความนี้</span>
-<ol>
-<li><a href="#intro" class="is-active">บทนำ</a></li>
-<li><a href="#crispr">CRISPR</a></li>
-<li><a href="#parts" class="sub">ส่วนประกอบ</a></li>
-<li><a href="#mechanism" class="sub">กลไกการตัดและซ่อมแซม</a></li>
-<li><a href="#limits" class="sub">ข้อจำกัด</a></li>
-<li><a href="#alphafold">AlphaFold</a></li>
-</ol>
+<ol><!-- สร้างอัตโนมัติจาก h2/h3 ใน .prose --></ol>
 </aside>
 
 <article class="prose">
 
 <h2 id="intro">บทนำ</h2>
 <p>เทคโนโลยีชีวภาพคือการนำสิ่งมีชีวิตหรือส่วนของสิ่งมีชีวิตมาใช้ประโยชน์ ตั้งแต่เรื่องใกล้ตัวอย่างการหมักไวน์หรือการใช้ยีสต์ทำขนมปัง ไปจนถึงการผลิตยารักษาโรคในปัจจุบัน</p>
-<p>ช่วงกว่า 30 ปีที่ผ่านมา นับตั้งแต่โครงการถอดรหัสจีโนมมนุษย์ (Human Genome Project) เริ่มขึ้นในปี ค.ศ. 1990 และเสร็จสิ้นในปี ค.ศ. 2003 วงการนี้ก้าวหน้าไปมาก และมีเครื่องมือสองอย่างที่เปลี่ยนวิธีทำงานของนักวิทยาศาสตร์อย่างเห็นได้ชัด</p>
+<p>ช่วงกว่า 30 ปีที่ผ่านมา นับตั้งแต่โครงการถอดรหัสจีโนมมนุษย์ (<button type="button" class="term" data-term="hgp">Human Genome Project</button>) เริ่มขึ้นในปี ค.ศ. 1990 และเสร็จสิ้นในปี ค.ศ. 2003 วงการนี้ก้าวหน้าไปมาก และมีเครื่องมือสองอย่างที่เปลี่ยนวิธีทำงานของนักวิทยาศาสตร์อย่างเห็นได้ชัด</p>
 
 <div class="duo">
 <div><span class="label accent">CRISPR-Cas9</span><p>เครื่องมือตัดแต่งยีน แก้ไขหรือเปลี่ยนรหัสพันธุกรรมตรงตำแหน่งที่กำหนดได้อย่างแม่นยำ</p></div>
@@ -92,7 +111,7 @@
 <p>ทั้งสองเทคโนโลยีได้รับการยอมรับในระดับสูงสุด โดย CRISPR ทำให้ Emmanuelle Charpentier และ Jennifer A. Doudna ได้รับรางวัลโนเบลสาขาเคมีในปี 2020 ส่วนในปี 2024 Demis Hassabis และ John Jumper ได้รับรางวัลโนเบลสาขาเคมีจากผลงาน AlphaFold ร่วมกับ David Baker จากผลงานการออกแบบโปรตีนด้วยคอมพิวเตอร์</p>
 
 <h2 id="crispr">CRISPR</h2>
-<p>CRISPR ถูกดัดแปลงมาจากระบบภูมิคุ้มกันของแบคทีเรีย ซึ่งแบคทีเรียใช้จดจำและตัด DNA ของไวรัสที่เคยเข้ามารุกราน นักวิจัยจึงนำกลไกนี้มาปรับใช้ ให้ตัด DNA ได้ตรงตำแหน่งที่ต้องการ โดยเปลี่ยนแค่ลำดับของ RNA นำทาง (guide RNA) เท่านั้น</p>
+<p>CRISPR ถูกดัดแปลงมาจากระบบภูมิคุ้มกันของแบคทีเรีย ซึ่งแบคทีเรียใช้จดจำและตัด DNA ของไวรัสที่เคยเข้ามารุกราน นักวิจัยจึงนำกลไกนี้มาปรับใช้ ให้ตัด DNA ได้ตรงตำแหน่งที่ต้องการ โดยเปลี่ยนแค่ลำดับของ <button type="button" class="term" data-term="grna">RNA นำทาง (guide RNA)</button> เท่านั้น</p>
 <p>เครื่องมือแก้ไขยีนรุ่นก่อนต้องออกแบบและสร้างโปรตีนขึ้นมาใหม่ทุกครั้งที่จะเปลี่ยนตำแหน่งเป้าหมาย ซึ่งใช้ทั้งเวลาและงบประมาณสูง</p>
 <blockquote class="pull">เพียงเปลี่ยน RNA นำทางสายสั้น ๆ ก็เปลี่ยนเป้าหมายได้ การวิจัยจึงทำได้เร็วขึ้นและประหยัดกว่ามาก</blockquote>
 
@@ -103,7 +122,7 @@
 <tbody>
 <tr><td>Cas9</td><td>ตัด DNA ตรงจุดที่กำหนด เพื่อลบยีนที่ผิดปกติออก หรือใส่ยีนใหม่เข้าไป</td><td>กรรไกรโมเลกุล</td></tr>
 <tr><td>guide RNA</td><td>ค้นหาตำแหน่งของ DNA ที่ต้องการแก้ไขในเซลล์</td><td>GPS</td></tr>
-<tr><td>PAM</td><td>จุดเริ่มที่ Cas9 ต้องพบก่อนลงมือ หากไม่มี PAM ต่อให้รหัสตรงกัน Cas9 ก็ไม่ทำงาน</td><td>ระบบรักษาความปลอดภัย</td></tr>
+<tr><td><button type="button" class="term" data-term="pam">PAM</button></td><td>จุดเริ่มที่ Cas9 ต้องพบก่อนลงมือ หากไม่มี PAM ต่อให้รหัสตรงกัน Cas9 ก็ไม่ทำงาน</td><td>ระบบรักษาความปลอดภัย</td></tr>
 </tbody>
 </table>
 </div>
@@ -114,18 +133,10 @@
 </figure>
 
 <h3 id="mechanism">กลไกการตัดและการซ่อมแซม</h3>
-<ol class="steps">
-<li><span class="n">1</span><span>Cas9 จับกับ gRNA แล้วสแกนหา DNA ที่มี PAM</span></li>
-<li><span class="n">2</span><span>เมื่อพบ PAM และลำดับเป้าหมายจับคู่กับ gRNA Cas9 จะตัด DNA สายคู่ให้ขาดที่ตำแหน่งใกล้ PAM</span></li>
-<li><span class="n">3</span><span>เซลล์ซ่อมแซมรอยขาดด้วยวิธี NHEJ หรือ HDR</span></li>
-</ol>
-<div class="duo filled">
-<div><span class="label" style="font-size:16px">NHEJ</span><p>ต่อปลายที่ขาดเข้าด้วยกันโดยตรง ไม่ต้องมีแม่แบบ มักเกิดการเพิ่มหรือลดเบสเล็กน้อย</p></div>
-<div><span class="label" style="font-size:16px">HDR</span><p>ซ่อมโดยใช้ DNA แม่แบบที่ใส่เข้าไปแทนที่</p></div>
-</div>
+<div data-mech></div>
 
 <h3 id="limits">ข้อจำกัด</h3>
-<p><strong>ความเสี่ยง off-target</strong> บางครั้ง gRNA จับกับตำแหน่งที่คล้ายเป้าหมายแต่ไม่เหมือนทุกเบส ทำให้ Cas9 ตัดผิดตำแหน่ง ซึ่งเป็นประเด็นด้านความปลอดภัยสำคัญ โดยเฉพาะในการรักษาโรค</p>
+<p><strong>ความเสี่ยง <button type="button" class="term" data-term="offtarget">off-target</button></strong> บางครั้ง gRNA จับกับตำแหน่งที่คล้ายเป้าหมายแต่ไม่เหมือนทุกเบส ทำให้ Cas9 ตัดผิดตำแหน่ง ซึ่งเป็นประเด็นด้านความปลอดภัยสำคัญ โดยเฉพาะในการรักษาโรค</p>
 
 <h2 id="alphafold">AlphaFold</h2>
 <p class="todo">[เนื้อหาส่วน AlphaFold]</p>
@@ -136,32 +147,45 @@
 </section>
 
 <div class="author-card">
-<span class="avatar" aria-hidden="true">กบ</span>
-<div><div class="name">กรวิชญ์ บัวดำ</div><div class="bio">นักเรียนโครงการ SMA โรงเรียนนาทวีวิทยาคม สนใจการแพทย์ เทคโนโลยีชีวภาพ และ Bioinformatics</div></div>
+<span class="avatar" aria-hidden="true" data-site="initials">กบ</span>
+<div><div class="name" data-site="name">กรวิชญ์ บัวดำ</div><div class="bio">นักเรียนโครงการ SMA โรงเรียนนาทวีวิทยาคม สนใจการแพทย์ เทคโนโลยีชีวภาพ และ Bioinformatics</div></div>
 </div>
 
 </article>
 </div>
+
+<nav class="post-nav" data-post-nav hidden aria-label="บทความก่อนหน้าและถัดไป" data-i18n-aria="aria.postNav"></nav>
+
+<section class="related" data-related hidden aria-labelledby="rel-h">
+<h2 id="rel-h" data-i18n="art.related">บทความในหมวดเดียวกัน</h2>
+<div class="related-grid" data-related-list></div>
+</section>
 </main>
 
 <footer class="site-footer">
 <div class="container">
 <a class="logo" href="../index.html"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
-<small>© 2569 กรวิชญ์ บัวดำ</small>
+<small>© <span data-year>2569</span> <span data-site="name">กรวิชญ์ บัวดำ</span></small>
 </div>
 </footer>
 
-<div class="search-layer" hidden role="dialog" aria-modal="true" aria-label="ค้นหา">
+<div class="search-layer" hidden role="dialog" aria-modal="true" aria-label="ค้นหา" data-i18n-aria="aria.search">
 <div class="search-box">
 <div class="field">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-<input id="search-input" type="search" autocomplete="off" placeholder="ค้นหาบทความและโปรเจกต์" data-i18n-ph="search.ph" aria-label="ค้นหา">
-<button type="button" class="icon-btn" data-search-close aria-label="ปิด"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<input id="search-input" type="search" autocomplete="off" placeholder="ค้นหาบทความและโปรเจกต์" data-i18n-ph="search.ph" aria-label="ค้นหา" data-i18n-aria="aria.search">
+<button type="button" class="icon-btn" data-search-close aria-label="ปิด" data-i18n-aria="aria.close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 </div>
 <ul class="search-results"></ul>
 </div>
 </div>
 
+<button type="button" class="to-top" hidden aria-label="กลับขึ้นด้านบน" data-i18n-aria="aria.toTop"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path class="arrow" d="M24 31V17M18 23l6-6 6 6"/></svg></button>
+
+<script src="../assets/js/covers.js"></script>
+<script src="../assets/js/glossary.js"></script>
+<script src="../assets/js/mechanism.js"></script>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/interactive.js"></script>
 </body>
 </html>
