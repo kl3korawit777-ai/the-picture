@@ -27,11 +27,11 @@ content/                    เนื้อหา: ที่ Pages CMS แก้
   data/site.json            ชื่อ อีเมล GitHub รูป + ข้อความแนะนำตัว/หน้าเกี่ยวกับฉัน (bio, intro, about_*, interests, path, tools)
   data/projects.json, certificates.json, activities.json, awards.json (stats + items), glossary.json, mechanism.json
 media/                      รูปต้นฉบับที่อัปโหลดจาก CMS: covers, articles, projects, certificates, activities, profile
-scripts/                    สคริปต์ build และเครื่องมือ (เฟส 13; check-site.py / optimize-images.py / prepare-deploy.py ยังเขียนสำหรับโครงสร้างเก่า)
+scripts/build.mjs           สคริปต์ build (ใช้ package.json: gray-matter, markdown-it, sharp) ส่วน check-site.py / optimize-images.py / prepare-deploy.py เขียนสำหรับโครงสร้างเก่า ยังไม่ได้ปรับ
 _site/                      ผลลัพธ์ build (ห้าม commit)
 ```
 
-ผลลัพธ์ที่ build แล้วต้องมีหน้าตา **เหมือนโครงสร้างเก่า** เพราะโค้ดใน `src/assets/js` ยังอ้าง path ของผลลัพธ์: `data/*.json` (build รวม `content/data/*.json` + `src/data/i18n.json` + `data/articles.json` ที่สร้างจาก front matter), `assets/img/<โฟลเดอร์>/<ไฟล์>.webp` (build ย่อรูปจาก `media/<โฟลเดอร์>/`), `articles/<slug>.html` (สร้างจาก .md) ดังนั้นในกฎด้านล่าง path ที่ขึ้นต้นด้วย `data/` หรือ `assets/` หมายถึง **ในผลลัพธ์ที่ build แล้ว** ต้นทางคือ `content/data/`, `src/data/`, `src/assets/`, `media/` **ระหว่างที่เฟส 13 ยังไม่เสร็จ เว็บใน `src/` ยังเปิดตรงๆ ไม่ได้**
+ผลลัพธ์ที่ build แล้วต้องมีหน้าตา **เหมือนโครงสร้างเก่า** เพราะโค้ดใน `src/assets/js` ยังอ้าง path ของผลลัพธ์: `data/*.json` (build รวม `content/data/*.json` + `src/data/i18n.json` + `data/articles.json` ที่สร้างจาก front matter), `assets/img/<โฟลเดอร์>/<ไฟล์>.webp` (build ย่อรูปจาก `media/<โฟลเดอร์>/`), `articles/<slug>.html` (สร้างจาก .md) ดังนั้นในกฎด้านล่าง path ที่ขึ้นต้นด้วย `data/` หรือ `assets/` หมายถึง **ในผลลัพธ์ที่ build แล้ว** ต้นทางคือ `content/data/`, `src/data/`, `src/assets/`, `media/` **เว็บใน `src/` เปิดตรงๆ ไม่ได้ ให้รัน `npm run build` แล้วเปิดโฟลเดอร์ `_site/` ผ่านเซิร์ฟเวอร์ในเครื่อง**
 
 ### รูปแบบบทความ (`content/articles/<slug>.md`)
 
@@ -44,6 +44,14 @@ front matter: `title`, `dek`, `category` (medicine|biotech|bioinformatics|ai|not
 - `{{figure src="..." alt="..." caption="..." credit="..."}}` รูปพร้อมคำบรรยาย (build ต่อเป็น "คำบรรยาย · ภาพ: เครดิต" src ว่าง = ช่องรอรูป)
 - `{{duo}} ... {{/duo}}` กล่องเปรียบเทียบสองฝั่ง คั่นสองฝั่งด้วยบรรทัด `---` แต่ละฝั่งขึ้นต้นด้วยบรรทัดตัวหนา `**ป้าย**` ตามด้วยข้อความ (ป้ายฝั่งแรกเป็นสี accent)
 - ห้ามแก้หรือเติมเนื้อหาบทความเอง รายการอ้างอิงอยู่ที่ `references` ไม่ใช่ท้ายเนื้อหา
+- ในเซลล์ตารางต้องเขียนเส้นตั้งของคำศัพท์เป็น `[[key|คำ]]` (ไม่งั้นตารางแตกคอลัมน์) รูปแบบ Markdown `![alt](ไฟล์ "คำบรรยาย")` ที่อยู่ในย่อหน้าเดียวก็เป็นรูปพร้อมคำบรรยายเหมือน `{{figure}}`
+- ชื่อไฟล์ `<slug>.md` = ที่อยู่บทความ ใช้ a-z 0-9 และ `-` เท่านั้น ชื่อรูปใน `src` ของ figure/covers เขียนชื่อไฟล์ที่อัปโหลดใน `media/` (`media/articles/` สำหรับรูปในเนื้อหา, `media/covers/` สำหรับปก; เขียนนามสกุลเดิมหรือไม่เขียนก็ได้)
+
+### ระบบ build (`scripts/build.mjs`, Node 20+, ไลบรารี: gray-matter, markdown-it, sharp)
+
+รันบน GitHub Actions เท่านั้น: `npm ci && npm run build` ได้ `_site/` ทำตามลำดับ: (1) คัดลอก `src/` (ข้ามไฟล์/โฟลเดอร์ที่ขึ้นต้นด้วย `_` ซึ่งเป็นเทมเพลต) (2) แปลง `content/articles/*.md` เป็น `articles/<slug>.html` ด้วย `src/articles/_template.html` พร้อม meta Open Graph/Twitter (รูปปกแรกที่เป็นรูปจริงถูกครอบเป็น JPEG 1200x630 `<ชื่อ>-og.jpg`; ไม่มีใช้ `og-default.png`) `status: draft` ไปที่ `drafts/<slug>.html` พร้อม `noindex` และไม่อยู่ใน `articles.json`/sitemap (3) `data/articles.json` เฉพาะ published เรียงวันที่ใหม่ไปเก่า + คัดลอก `content/data/*.json` (ชื่อรูปในไฟล์ข้อมูลถูกแปลงเป็น `.webp`) (4) รูปใน `media/<โฟลเดอร์>/` เป็น `assets/img/<โฟลเดอร์>/<ชื่อ>.webp` (กว้างสูงสุด 1600px) และ `<ชื่อ>-800.webp` บทความได้ `srcset`/`width`/`height`/`loading="lazy"` ให้เอง JS ที่สร้างรูป (ปก ช่องรูป) ใส่ `srcset` ตามชื่อนี้ (5) `sitemap.xml`, `robots.txt` (6) **build ล้ม (exit 1) เมื่อบทความ published ขาด title, date หรือ category (หรือค่าไม่ถูกต้อง) มีรูปที่ไม่มี alt รูปที่ไม่มีไฟล์ใน `media/` หรือคำศัพท์ `[[key|…]]` ที่ไม่มีใน glossary.json** ส่วน draft แค่เตือน
+
+ที่อยู่เว็บ (og:url, og:image, hreflang, sitemap) มาจาก env `SITE_URL` → `url` ใน `content/data/site.json` → `GITHUB_REPOSITORY` (`owner.github.io[/repo]`) ถ้าไม่มีสักอย่างจะข้ามส่วนที่ต้องใช้ URL เต็มและเตือน ห้ามเดา URL
 
 ## ข้อตกลงในโค้ด
 

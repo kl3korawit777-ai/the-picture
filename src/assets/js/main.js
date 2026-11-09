@@ -442,6 +442,10 @@
           if (window.console) console.warn('Image not found: ' + src);
           slot.classList.remove('has-img'); slot.textContent = fallback;
         };
+        if (!isExternal(file) && /\.webp$/.test(src)) {            /* the build makes name.webp (1600 px) and name-800.webp */
+          im.srcset = src.replace(/\.webp$/, '-800.webp') + ' 800w, ' + src + ' 1600w';
+          im.sizes = '(max-width: 640px) 100vw, 640px';
+        }
         im.src = src;
         slot.textContent = '';
         slot.classList.add('has-img');
@@ -940,7 +944,13 @@
       }
     }
     if (articleSlug) {
-      loadData('articles').then(function (l) { renderArticleExtras(articleSlug, l); }).catch(function (e) { if (window.console) console.error(e); });
+      loadData('articles').then(function (l) {
+        /* a draft is not in articles.json: the build puts its own entry in the page so it can still be previewed */
+        if (!findArticle(l, articleSlug)) {
+          try { var own = JSON.parse(document.getElementById('tp-article').textContent); if (own && own.slug === articleSlug) l = l.concat([own]); } catch (e) {}
+        }
+        renderArticleExtras(articleSlug, l);
+      }).catch(function (e) { if (window.console) console.error(e); });
     }
 
     /* ---------- search (built from the two data files + fixed pages) ---------- */

@@ -172,6 +172,10 @@
       if (window.console) console.warn('Cover image not found: ' + src);
       host.textContent = ''; host.appendChild(placeholder());
     };
+    if (/assets\/img\/covers\/[^\/]+\.webp$/.test(src)) {      /* a built picture: name.webp (1600 px) and name-800.webp */
+      im.srcset = src.replace(/\.webp$/, '-800.webp') + ' 800w, ' + src + ' 1600w';
+      im.sizes = '(max-width: 900px) 100vw, 900px';
+    }
     im.src = src;
     host.appendChild(im);
   }

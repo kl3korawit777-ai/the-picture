@@ -1,0 +1,14 @@
+{
+  "name": "the-picture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Picture: build script (runs on GitHub Actions; authors never run it)",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": { "build": "node scripts/build.mjs" },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0",
+    "sharp": "^0.33.5"
+  }
+}
