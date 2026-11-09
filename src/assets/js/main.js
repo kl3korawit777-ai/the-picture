@@ -556,8 +556,9 @@
     function renderGallery(list) {
       var host = document.querySelector('[data-gallery]');
       if (!host) return;
+      var clean = function (v) { v = String(v || '').trim(); return /^[-–—.]$/.test(v) ? '' : v; };       /* "-" typed only to satisfy a required CMS field = empty */
       var items = list.filter(function (c) { return c && String(c.image || '').trim(); }).map(function (c) {
-        return { type: 'image', src: 'assets/img/gallery/' + String(c.image).trim(), alt: c.alt, caption: c.caption, credit: c.credit, alt_en: c.alt_en, caption_en: c.caption_en, credit_en: c.credit_en };
+        return { type: 'image', src: 'assets/img/gallery/' + String(c.image).trim(), alt: c.alt, caption: clean(c.caption), credit: clean(c.credit), alt_en: c.alt_en, caption_en: clean(c.caption_en), credit_en: clean(c.credit_en) };
       });
       host.textContent = '';
       if (!items.length || !TP.covers) { host.appendChild(bk(mk('div', 'ph'), 'gallery.placeholder')); return; }       /* no pictures yet: the [ ] slot */
