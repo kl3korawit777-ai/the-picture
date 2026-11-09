@@ -46,37 +46,31 @@
 <main id="main" class="container page-main" style="padding-top: 64px">
 
 <section class="hero-split" style="gap: 56px">
-<!-- รูปโปรไฟล์: ใส่ชื่อไฟล์ที่ "photo" ใน data/site.json (ไฟล์อยู่ใน assets/img/profile/) ใช้ร่วมกับหน้าพอร์ตโฟลิโอ -->
+<!-- รูปโปรไฟล์: ใส่ชื่อไฟล์ที่ "photo" ใน content/data/site.json (ไฟล์อยู่ใน media/profile/) ใช้ร่วมกับหน้าพอร์ตโฟลิโอ -->
 <div class="photo round"><div class="ph" data-slot="profile">[รูปโปรไฟล์]</div></div>
 <div class="copy">
 <span class="eyebrow">About me</span>
-<h1>สวัสดีครับ ผมชื่อ <span data-site="name">กรวิชญ์ บัวดำ</span></h1>
-<p>นักเรียนโครงการ SMA โรงเรียนนาทวีวิทยาคม จังหวัดสงขลา ผมสนใจการแพทย์ ชีววิทยา เทคโนโลยีชีวภาพ และเทคโนโลยี และมีเป้าหมายระยะยาวคือการเป็นแพทย์</p>
-<p>The Picture คือพื้นที่ที่ผมใช้เขียนบทความและเก็บผลงานที่สร้างขึ้นระหว่างทาง</p>
+<h1><span data-site="about_hello"></span> <span data-site="name">กรวิชญ์ บัวดำ</span></h1>
+<p data-site="about_intro"></p>
+<p data-site="about_site"></p>
 </div>
 </section>
 
 <section class="section" aria-labelledby="in-h">
 <span class="eyebrow">Interests</span>
 <h2 id="in-h" class="section-title" data-i18n="ab.interests">สิ่งที่ผมสนใจ</h2>
-<div class="interest-list">
-<span>Medicine</span><span>Biotechnology</span><span>Bioinformatics</span><span>Organoid Technology</span><span>AI</span><span>Web Development</span>
-</div>
+<div class="interest-list" data-interests></div>
 </section>
 
 <section class="section split" aria-labelledby="pa-h">
 <div class="side"><span class="eyebrow">Path</span><h2 id="pa-h" class="section-title" data-i18n="ab.path">เส้นทางที่วางไว้</h2></div>
-<ol class="path main">
-<li class="now"><span class="rail"><span class="dot"></span><span class="line"></span></span><span class="step"><span class="stage">ตอนนี้</span><span class="title">เตรียมสอบ TCAS70</span><span class="sub">มุ่งสู่คณะแพทยศาสตร์ผ่าน กสพท.</span></span></li>
-<li class="next"><span class="rail"><span class="dot"></span><span class="line"></span></span><span class="step"><span class="stage">ต่อไป</span><span class="title">ปริญญาโท</span><span class="sub">Bioinformatics หรือ Medical Biotechnology</span></span></li>
-<li><span class="rail"><span class="dot"></span></span><span class="step" style="padding-bottom:0"><span class="stage">อนาคต</span><span class="title">แพทย์ และสตาร์ตอัปด้าน Biotech</span><span class="sub">ก่อตั้งหรือร่วมก่อตั้งสตาร์ตอัปด้าน Biotech หรือ Bioinformatics</span></span></li>
-</ol>
+<ol class="path main" data-path></ol>
 </section>
 
 <section class="section" aria-labelledby="tl-h">
 <span class="eyebrow">Tools</span>
 <h2 id="tl-h" class="section-title" data-i18n="ab.tools">เครื่องมือที่ผมใช้สร้างงาน</h2>
-<div class="tool-grid"><div>Claude Code</div><div>Python</div><div>GitHub Pages</div><div>Supabase</div><div>Teachable Machine</div></div>
+<div class="tool-grid" data-tools></div>
 </section>
 
 <section class="section band contact" aria-labelledby="co-h">
@@ -85,7 +79,7 @@
 <p data-i18n="ab.contactText">ยินดีพูดคุยเรื่องบทความ โปรเจกต์ หรือแลกเปลี่ยนความรู้</p>
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
-<!-- อีเมลและ GitHub ดึงจาก data/site.json (ว่างอยู่: อีเมลขึ้น [อีเมล] ปุ่มคัดลอกซ่อน, GitHub ขึ้น [ลิงก์ GitHub]) -->
+<!-- ข้อความหน้านี้ (ทักทาย แนะนำตัว สิ่งที่สนใจ เส้นทาง เครื่องมือ) อีเมลและ GitHub ดึงจาก content/data/site.json (ว่างอยู่: อีเมลขึ้น [อีเมล] ปุ่มคัดลอกซ่อน, GitHub ขึ้น [ลิงก์ GitHub]) -->
 <span class="addr" data-site="email">[อีเมล]</span>
 <button type="button" class="btn btn-dark" data-copy-site="email" data-i18n="copy">คัดลอก</button>
 <a class="btn btn-line" href="#" data-site-href="github">GitHub</a>

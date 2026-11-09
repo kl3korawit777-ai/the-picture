@@ -1,0 +1,64 @@
+{
+  "name": "กรวิชญ์ บัวดำ",
+  "name_en": "",
+  "initials": "กบ",
+  "initials_en": "",
+  "url": "",
+  "email": "",
+  "github": "",
+  "photo": "",
+  "intro": "นักเรียนโครงการ SMA (Science-Math Ability) โรงเรียนนาทวีวิทยาคม จังหวัดสงขลา สนใจการแพทย์ ชีววิทยา และเทคโนโลยีชีวภาพ",
+  "intro_en": "",
+  "bio": "นักเรียนโครงการ SMA โรงเรียนนาทวีวิทยาคม สนใจการแพทย์ เทคโนโลยีชีวภาพ และ Bioinformatics",
+  "bio_en": "",
+  "about_hello": "สวัสดีครับ ผมชื่อ",
+  "about_hello_en": "",
+  "about_intro": "นักเรียนโครงการ SMA โรงเรียนนาทวีวิทยาคม จังหวัดสงขลา ผมสนใจการแพทย์ ชีววิทยา เทคโนโลยีชีวภาพ และเทคโนโลยี และมีเป้าหมายระยะยาวคือการเป็นแพทย์",
+  "about_intro_en": "",
+  "about_site": "The Picture คือพื้นที่ที่ผมใช้เขียนบทความและเก็บผลงานที่สร้างขึ้นระหว่างทาง",
+  "about_site_en": "",
+  "interests": [
+    "Medicine",
+    "Biotechnology",
+    "Bioinformatics",
+    "Organoid Technology",
+    "AI",
+    "Web Development"
+  ],
+  "tools": [
+    "Claude Code",
+    "Python",
+    "GitHub Pages",
+    "Supabase",
+    "Teachable Machine"
+  ],
+  "path": [
+    {
+      "state": "now",
+      "stage": "ตอนนี้",
+      "stage_en": "",
+      "title": "เตรียมสอบ TCAS70",
+      "title_en": "",
+      "sub": "มุ่งสู่คณะแพทยศาสตร์ผ่าน กสพท.",
+      "sub_en": ""
+    },
+    {
+      "state": "next",
+      "stage": "ต่อไป",
+      "stage_en": "",
+      "title": "ปริญญาโท",
+      "title_en": "",
+      "sub": "Bioinformatics หรือ Medical Biotechnology",
+      "sub_en": ""
+    },
+    {
+      "state": "",
+      "stage": "อนาคต",
+      "stage_en": "",
+      "title": "แพทย์ และสตาร์ตอัปด้าน Biotech",
+      "title_en": "",
+      "sub": "ก่อตั้งหรือร่วมก่อตั้งสตาร์ตอัปด้าน Biotech หรือ Bioinformatics",
+      "sub_en": ""
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "stats": [
+    {
+      "big": "3 ปี",
+      "big_en": "3 years",
+      "what": "แข่งขันตอบปัญหาชีววิทยาและเคมีต่อเนื่อง",
+      "what_en": "Biology and chemistry quiz competitions in a row"
+    },
+    {
+      "big": "รองฯ 2",
+      "big_en": "2nd runner-up",
+      "what": "สอบแข่งขันเคมี ระดับจังหวัด",
+      "what_en": "Chemistry exam, provincial level"
+    },
+    {
+      "big": "รองฯ 1",
+      "big_en": "1st runner-up",
+      "what": "ตอบปัญหาชีววิทยา ระดับโรงเรียน",
+      "what_en": "Biology quiz, school level"
+    }
+  ],
+  "items": [
+    {
+      "cat": "chem",
+      "when": "[ปี]",
+      "when_en": "",
+      "title": "รองชนะเลิศอันดับ 2 สอบแข่งขันเคมี",
+      "title_en": "",
+      "sub": "ระดับจังหวัด",
+      "sub_en": ""
+    },
+    {
+      "cat": "bio",
+      "when": "[ปี]",
+      "when_en": "",
+      "title": "รองชนะเลิศอันดับ 1 ตอบปัญหาชีววิทยา",
+      "title_en": "",
+      "sub": "ระดับโรงเรียน",
+      "sub_en": ""
+    },
+    {
+      "cat": "chem bio",
+      "when": "3 ปีต่อเนื่อง",
+      "when_en": "",
+      "title": "ตัวแทนแข่งขันตอบปัญหาชีววิทยาและเคมี",
+      "title_en": "",
+      "sub": "[รายการแข่งขัน]",
+      "sub_en": ""
+    }
+  ]
+}

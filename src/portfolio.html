@@ -53,10 +53,10 @@
 <div class="copy">
 <span class="eyebrow">Portfolio · TCAS70</span>
 <h1 data-site="name">กรวิชญ์ บัวดำ</h1>
-<p>นักเรียนโครงการ SMA (Science-Math Ability) โรงเรียนนาทวีวิทยาคม จังหวัดสงขลา สนใจการแพทย์ ชีววิทยา และเทคโนโลยีชีวภาพ</p>
+<p data-site="intro"></p>
 <div class="actions"><a class="btn btn-line" href="about.html" data-i18n="pf.about">เกี่ยวกับฉัน</a></div>
 </div>
-<!-- รูปโปรไฟล์: ใส่ชื่อไฟล์ที่ "photo" ใน data/site.json (ไฟล์อยู่ใน assets/img/profile/) -->
+<!-- รูปโปรไฟล์: ใส่ชื่อไฟล์ที่ "photo" ใน content/data/site.json (ไฟล์อยู่ใน media/profile/) -->
 <div class="photo"><div class="ph" data-slot="profile">[รูปโปรไฟล์]</div></div>
 </section>
 
@@ -70,20 +70,14 @@
 <!-- แสดงเฉพาะตอนพิมพ์: บอกว่าเป็นเวอร์ชันไหน (ปุ่มเวอร์ชันถูกซ่อนตอนพิมพ์) -->
 <p class="print-only" data-version-print hidden><span data-ver="chem" data-i18n="pf.verChem" hidden>พอร์ตโฟลิโอเวอร์ชัน: เคมี</span><span data-ver="bio" data-i18n="pf.verBio" hidden>พอร์ตโฟลิโอเวอร์ชัน: ชีววิทยา</span></p>
 
-<div class="stats-row">
-<div class="stat"><span class="big" data-i18n="stat.years">3 ปี</span><span class="what" data-i18n="stat.years.d">แข่งขันตอบปัญหาชีววิทยาและเคมีต่อเนื่อง</span></div>
-<div class="stat"><span class="big" data-i18n="stat.chem">รองฯ 2</span><span class="what" data-i18n="stat.chem.d">สอบแข่งขันเคมี ระดับจังหวัด</span></div>
-<div class="stat"><span class="big" data-i18n="stat.bio">รองฯ 1</span><span class="what" data-i18n="stat.bio.d">ตอบปัญหาชีววิทยา ระดับโรงเรียน</span></div>
-</div>
+<!-- สถิติเด่นสร้างจาก content/data/awards.json (stats) ไม่ต้องแก้ตรงนี้ -->
+<div class="stats-row" data-stats></div>
 
 <section class="section split" aria-labelledby="aw-h">
 <div class="side"><span class="eyebrow">Achievements</span><h2 id="aw-h" class="section-title" data-i18n="pf.awards">ผลงานและรางวัล</h2></div>
 <div class="main" id="awards">
-<ol class="award-list">
-<li data-cat="chem"><span class="when">[ปี]</span><span class="what"><span class="title">รองชนะเลิศอันดับ 2 สอบแข่งขันเคมี</span><span class="sub">ระดับจังหวัด</span></span></li>
-<li data-cat="bio"><span class="when">[ปี]</span><span class="what"><span class="title">รองชนะเลิศอันดับ 1 ตอบปัญหาชีววิทยา</span><span class="sub">ระดับโรงเรียน</span></span></li>
-<li data-cat="chem bio"><span class="when">3 ปีต่อเนื่อง</span><span class="what"><span class="title">ตัวแทนแข่งขันตอบปัญหาชีววิทยาและเคมี</span><span class="sub">[รายการแข่งขัน]</span></span></li>
-</ol>
+<!-- รายการรางวัลสร้างจาก content/data/awards.json (items) -->
+<ol class="award-list" data-award-list></ol>
 </div>
 </section>
 
@@ -91,21 +85,8 @@
 <span class="eyebrow">Experience</span>
 <h2 id="ex-h" class="section-title" style="margin-bottom: 28px" data-i18n="pf.exp">ห้องปฏิบัติการและกิจกรรม</h2>
 <div id="experience">
-<!-- ภาพกิจกรรม: ใส่ชื่อไฟล์ใน data-file (ไฟล์อยู่ใน assets/img/activities/) -->
-<div class="exp-grid">
-<article class="exp-card" data-cat="bio">
-<div class="ph" data-slot="activities" data-file="">[ภาพกิจกรรม]</div>
-<div class="body"><span class="kicker">Lab</span><h3>สกัด DNA และ Gel Electrophoresis</h3><p>ลงมือปฏิบัติจริงในห้องแล็บ ทำงานร่วมกับเพื่อนอย่างอิสระ</p></div>
-</article>
-<article class="exp-card" data-cat="physics">
-<div class="ph" data-slot="activities" data-file="">[ภาพกิจกรรม]</div>
-<div class="body"><span class="kicker">Experiment</span><h3>การทดลองการเคลื่อนที่แบบโพรเจกไทล์</h3><p>ยิงลูกปิงปองที่มุมต่าง ๆ เพื่อศึกษาการเคลื่อนที่</p></div>
-</article>
-<article class="exp-card" data-cat="stem">
-<div class="ph" data-slot="activities" data-file="">[ภาพกิจกรรม]</div>
-<div class="body"><span class="kicker">STEM</span><h3>My Math My STEM 1 และ 2</h3><p>ออกแบบสะพานหลอดพลาสติกรับลูกปิงปอง และอุปกรณ์กันไข่แตกเมื่อปล่อยจากความสูง 3 เมตร</p></div>
-</article>
-</div>
+<!-- การ์ดกิจกรรมสร้างจาก content/data/activities.json (image = ชื่อไฟล์ใน media/activities/) -->
+<div class="exp-grid" data-activities></div>
 </div>
 </section>
 

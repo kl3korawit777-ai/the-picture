@@ -17,3 +17,6 @@ node_modules/
 # Claude Code local settings
 .claude/
 img-src/
+
+# Build output (GitHub Actions only)
+_site/

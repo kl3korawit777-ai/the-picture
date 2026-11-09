@@ -47,6 +47,8 @@
   /* start every download at once instead of one after another (i18n -> data): the page waits for the slowest, not the sum */
   loadData('site', true);
   if (document.querySelector('[data-certificates]')) loadData('certificates');
+  if (document.querySelector('[data-award-list]')) loadData('awards', true);
+  if (document.querySelector('[data-activities]')) loadData('activities');
   if (document.querySelector('.term[data-term]')) loadData('glossary');       /* article components (glossary.js, mechanism.js) */
   if (document.querySelector('[data-mech]')) loadData('mechanism', true);
   if (document.getElementById('latest-list') || articleSlug || document.querySelector('.search-layer')) loadData('articles');
@@ -239,7 +241,9 @@
       var targets = [target];
       if (extra) extra.split(' ').forEach(function (id) { var e = document.getElementById(id); if (e) targets.push(e); });
 
+      var chosen = null;
       function run(value) {
+        chosen = value;
         buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === value)); });
         targets.forEach(function (tg) {
           var shown = 0;
@@ -277,6 +281,7 @@
         });
       });
       if (hashed) { applyHash(); window.addEventListener('hashchange', applyHash); }
+      document.addEventListener('tp:refilter', function () { run(chosen); });          /* items drawn from JSON after the filter was set up */
       // external triggers, e.g. category cards
       document.querySelectorAll('[data-filter-trigger="' + group.getAttribute('data-filter-group') + '"]').forEach(function (trig) {
         trig.addEventListener('click', function () {
@@ -487,6 +492,89 @@
       if (TP.certs) TP.certs.enhance(host);
     }
 
+    /* ---------- awards.json (stats + award list), activities.json, and the about page lists from site.json ---------- */
+    function refilter() { document.dispatchEvent(new CustomEvent('tp:refilter')); }
+    function whenBi(el, o) {                                  /* a 4-digit year is Gregorian in the JSON (shown as พ.ศ. in Thai); anything else is shown as written */
+      var w = String(o.when == null ? '' : o.when).trim();
+      if (/^\d{4}$/.test(w)) return yearBi(el, w);
+      return bi(el, w, o.when_en || '');
+    }
+    function renderAwards(d) {
+      var stats = document.querySelector('[data-stats]'), list = document.querySelector('[data-award-list]');
+      if (stats) {
+        stats.textContent = '';
+        (d.stats || []).forEach(function (x) {
+          var b = mk('div', 'stat');
+          b.appendChild(bi(mk('span', 'big'), x.big || '', x.big_en || ''));
+          b.appendChild(bi(mk('span', 'what'), x.what || '', x.what_en || ''));
+          stats.appendChild(b);
+        });
+      }
+      if (list) {
+        list.textContent = '';
+        (d.items || []).forEach(function (x) {
+          var li = mk('li');
+          if (x.cat) li.setAttribute('data-cat', x.cat);
+          li.appendChild(whenBi(mk('span', 'when'), x));
+          var what = mk('span', 'what');
+          what.appendChild(bi(mk('span', 'title'), x.title || '', x.title_en || ''));
+          if (x.sub) what.appendChild(bi(mk('span', 'sub'), x.sub, x.sub_en || ''));
+          li.appendChild(what);
+          list.appendChild(li);
+        });
+      }
+      refilter();
+    }
+    function renderActivities(list) {
+      var host = document.querySelector('[data-activities]');
+      if (!host) return;
+      host.textContent = '';
+      list.forEach(function (x) {
+        if (!x) return;
+        var card = mk('article', 'exp-card');
+        if (x.cat) card.setAttribute('data-cat', x.cat);
+        var ph = mk('div', 'ph');
+        ph.setAttribute('data-slot', 'activities');
+        ph.setAttribute('data-file', String(x.image || '').trim());
+        if (x.alt) ph.setAttribute('data-alt', x.alt);
+        ph.appendChild(bk(mk('span'), 'act.placeholder'));                  /* the [ ] slot until there is a picture */
+        card.appendChild(ph);
+        var body = mk('div', 'body');
+        if (x.kicker) { var k = mk('span', 'kicker'); k.textContent = x.kicker; body.appendChild(k); }
+        body.appendChild(bi(mk('h3'), x.title || '', x.title_en || ''));
+        if (x.text) body.appendChild(bi(mk('p'), x.text, x.text_en || ''));
+        card.appendChild(body);
+        host.appendChild(card);
+      });
+      initSlots(host);
+      refilter();
+    }
+    function renderAbout(s) {
+      var ints = document.querySelector('[data-interests]');
+      if (ints) { ints.textContent = ''; (s.interests || []).forEach(function (w) { var e = mk('span'); e.textContent = w; ints.appendChild(e); }); }
+      var tools = document.querySelector('[data-tools]');
+      if (tools) { tools.textContent = ''; (s.tools || []).forEach(function (w) { var e = mk('div'); e.textContent = w; tools.appendChild(e); }); }
+      var path = document.querySelector('[data-path]');
+      if (path) {
+        path.textContent = '';
+        var steps = s.path || [];
+        steps.forEach(function (x, i) {
+          var li = mk('li', x.state || '');
+          var rail = mk('span', 'rail');
+          rail.appendChild(mk('span', 'dot'));
+          if (i < steps.length - 1) rail.appendChild(mk('span', 'line'));
+          li.appendChild(rail);
+          var step = mk('span', 'step');
+          if (i === steps.length - 1) step.style.paddingBottom = '0';
+          step.appendChild(bi(mk('span', 'stage'), x.stage || '', x.stage_en || ''));
+          step.appendChild(bi(mk('span', 'title'), x.title || '', x.title_en || ''));
+          if (x.sub) step.appendChild(bi(mk('span', 'sub'), x.sub, x.sub_en || ''));
+          li.appendChild(step);
+          path.appendChild(li);
+        });
+      }
+    }
+
     /* printing: make sure lazy images are loaded before the browser lays out the pages */
     window.addEventListener('beforeprint', function () {
       document.querySelectorAll('img[loading="lazy"]').forEach(function (i) { i.loading = 'eager'; });
@@ -654,6 +742,8 @@
     if (document.querySelector('[data-certificates]')) {
       loadData('certificates').then(renderCertificates).catch(showError);
     }
+    if (document.querySelector('[data-award-list]')) loadData('awards', true).then(renderAwards).catch(showError);
+    if (document.querySelector('[data-activities]')) loadData('activities').then(renderActivities).catch(showError);
 
     /* ---------- project page: header and links come from projects.json (matched by data-project) ---------- */
     function projectLinks(box, p, showSoon) {
@@ -793,7 +883,7 @@
       }
     });
 
-    loadData('site', true).then(function (s) { siteCache = s; applySite(s); }, function (e) { if (window.console) console.error(e); }).then(initSlots);
+    loadData('site', true).then(function (s) { siteCache = s; renderAbout(s); applySite(s); }, function (e) { if (window.console) console.error(e); }).then(initSlots);
 
     /* ---------- article page: category, date, previous/next, same-category list ---------- */
     function navLink(p, cls, key) {

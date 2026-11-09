@@ -466,6 +466,12 @@ html.has-lightbox { overflow: hidden; }
 .cat-card .count { min-height: 1.7em; }
 .byline .when { display: block; min-height: 1.4em; }
 .proj-grid:empty { min-height: 420px; }
+.stats-row:empty { min-height: 132px; }                 /* portfolio: awards.json / activities.json / about lists arrive after the first paint */
+.award-list:empty { min-height: 260px; }
+.exp-grid:empty { min-height: 330px; }
+.interest-list:empty { min-height: 48px; }
+.path:empty { min-height: 280px; }
+.tool-grid:empty { min-height: 64px; }
 .article-head h1:empty { min-height: 1.3em; }
 .article-head .article-dek:empty { min-height: 1.7em; }
 

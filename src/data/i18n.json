@@ -145,16 +145,11 @@
     "search.type.page": "หน้า",
     "search.type.project": "โปรเจกต์",
     "skip": "ข้ามไปที่เนื้อหา",
-    "stat.bio": "รองฯ 1",
-    "stat.bio.d": "ตอบปัญหาชีววิทยา ระดับโรงเรียน",
-    "stat.chem": "รองฯ 2",
-    "stat.chem.d": "สอบแข่งขันเคมี ระดับจังหวัด",
-    "stat.years": "3 ปี",
-    "stat.years.d": "แข่งขันตอบปัญหาชีววิทยาและเคมีต่อเนื่อง",
     "type.ai": "AI",
     "type.webapp": "Web App",
     "type.website": "Website",
-    "zoom.label": "ขยายภาพ"
+    "zoom.label": "ขยายภาพ",
+    "act.placeholder": "[ภาพกิจกรรม]"
   },
   "en": {
     "ab.contact": "Get in touch",
@@ -302,15 +297,10 @@
     "search.type.page": "Page",
     "search.type.project": "Project",
     "skip": "Skip to content",
-    "stat.bio": "1st runner-up",
-    "stat.bio.d": "Biology quiz, school level",
-    "stat.chem": "2nd runner-up",
-    "stat.chem.d": "Chemistry exam, provincial level",
-    "stat.years": "3 years",
-    "stat.years.d": "Biology and chemistry quiz competitions in a row",
     "type.ai": "AI",
     "type.webapp": "Web App",
     "type.website": "Website",
-    "zoom.label": "Enlarge image"
+    "zoom.label": "Enlarge image",
+    "act.placeholder": "[Activity photo]"
   }
 }

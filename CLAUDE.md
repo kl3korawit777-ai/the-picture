@@ -5,35 +5,45 @@
 
 ## กฎหลัก
 
-1. **ไม่ใช้ framework และไม่มีขั้นตอน build** ไม่มี npm, bundler, SCSS, template engine ทุกอย่างต้องเปิดได้ทันทีบน GitHub Pages (ดับเบิลคลิก `index.html` ก็ใช้งานได้)
+1. **ไม่ใช้ framework ฝั่งหน้าเว็บ (ไม่มี React/Vue ฯลฯ) และ build บน GitHub Actions เท่านั้น ผู้เขียนไม่ต้องรันอะไรในเครื่อง** (branch `cms`, เฟส 12 เป็นต้นไป): ผู้เขียนแก้เนื้อหาผ่าน Pages CMS (pagescms.org) ซึ่งบันทึกลง repo โดยตรง แล้ว GitHub Actions รันสคริปต์ใน `scripts/` สร้าง `_site/` และ deploy ขึ้น GitHub Pages ผลลัพธ์ใน `_site/` ยังเป็น HTML/CSS/JS ล้วน (ไม่มี bundler, SCSS, template engine ฝั่งเบราว์เซอร์) ห้ามใส่ขั้นตอนที่ต้องให้ผู้เขียนรันในเครื่องหรือ commit ไฟล์ที่ build แล้ว (`_site/` อยู่ใน `.gitignore`)
 2. **โทนสีขาว สีเน้นสีเดียวคือ `--accent` (#2B59C3)** ใช้ token ใน `:root` ของ `assets/css/style.css` เท่านั้น ห้ามใส่สีตรงๆ (hex, rgb, ชื่อสี) ในหน้า HTML หรือใน rule ของ CSS ถ้าต้องการสีใหม่ ให้เพิ่ม token ใน `:root` ก่อนแล้วค่อยอ้างถึง
 3. **ฟอนต์:** Prompt สำหรับหัวข้อ (`--font-display`), IBM Plex Sans Thai สำหรับเนื้อหา (`--font-body`) โหลดผ่าน Google Fonts ห้ามเพิ่มฟอนต์อื่น
 4. **บทความกับโปรเจกต์แยกกันเสมอ** ห้ามนำมาปนในหน้าเดียวกัน ยกเว้นส่วน "ผลงานที่เกี่ยวข้อง" (`.work-grid`) ในพอร์ตโฟลิโอ
 5. **ทุกหน้าต้องใช้งานได้ที่ความกว้าง 375px และไม่มี scroll แนวนอน** ตรวจทุกครั้งที่แก้ layout (ตารางกว้างให้ครอบด้วย `.table-wrap` ที่ scroll ในตัวเอง)
 6. **ข้อความในวงเล็บ `[ ]` คือช่องรอข้อมูลจริง ห้ามแต่งข้อมูลมาเติมเอง** (ปี ชื่อรายการแข่งขัน อีเมล ลิงก์ แหล่งอ้างอิง ภาพ ฯลฯ) ถ้าไม่มีข้อมูลให้คงช่อง `[ ]` ไว้และบอกผู้ใช้ ห้ามเดาตัวเลขรางวัลหรือข้อเท็จจริงทางวิทยาศาสตร์
 
-## โครงสร้าง
+## โครงสร้าง (branch `cms`)
 
 ```
-index.html                  หน้าแรก (บทความ)
-articles/<slug>.html        บทความ 1 เรื่อง = 1 ไฟล์ (ใช้ data-base="../")
-projects.html               หน้ารวมโปรเจกต์ (การ์ดสร้างจาก data/projects.json กรองด้วย data-cat: website, webapp, ai)
-projects/<slug>.html        หน้ารายละเอียดโปรเจกต์ 1 อัน = 1 ไฟล์ (ใช้ data-base="../" และ data-project="<slug>")
-data/i18n.json              ข้อความ UI ทั้งหมด ไทย/อังกฤษ (แหล่งเดียว)
-articles/en/<slug>.html     บทความฉบับอังกฤษ (ผู้ใช้เขียนเอง; ใช้ data-base="../../" และ lang="en")
-data/certificates.json      เกียรติบัตร (title, year, image)
-data/glossary.json          คำศัพท์ในบทความ (key, term, definition)
-data/mechanism.json         ข้อความของแผนภาพกลไก CRISPR-Cas9
-data/site.json              ชื่อ อีเมล GitHub รูปโปรไฟล์ (แหล่งข้อมูลเดียว ใช้ทุกหน้า)
-assets/img/<profile|activities|certificates|projects|covers>/   รูปที่ย่อแล้ว (.webp)
-scripts/optimize-images.py  ย่อรูปจาก img-src/ เป็น WebP กว้างไม่เกิน 1600px
-data/articles.json          รายการบทความ (แหล่งข้อมูลเดียว)
-data/projects.json          รายการโปรเจกต์ (แหล่งข้อมูลเดียว)
-portfolio.html              พอร์ตโฟลิโอ TCAS70 (สลับเวอร์ชัน chem/bio)
-about.html                  เกี่ยวกับฉัน
-assets/css/style.css        สไตล์ทั้งเว็บไฟล์เดียว
-assets/js/main.js           IIFE ไฟล์เดียว: TH/EN, ค้นหา, ตัวกรอง, สารบัญ, แถบความคืบหน้า, copy/share
+src/                        ของที่นักพัฒนาดูแล (ผู้เขียนไม่แตะ)
+  index.html, projects.html, portfolio.html, about.html, 404.html   หน้าเทมเพลต (ข้อความดึงจาก content/ ตอนรันในเบราว์เซอร์หรือตอน build)
+  articles/_template.html, articles/en/_template.html               โครงหน้าบทความ (เฟส 13 จะสร้างหน้าบทความจาก content/articles/*.md ด้วยโครงนี้)
+  projects/<slug>.html      หน้าโปรเจกต์ 1 อัน = 1 ไฟล์ (ใช้ data-base="../" และ data-project="<slug>")
+  assets/css, assets/js     สไตล์และสคริปต์ทั้งหมด (style.css, main.js, covers, certificates, glossary, mechanism, interactive)
+  data/i18n.json            ข้อความ UI ไทย/อังกฤษ (นักพัฒนาแก้ ไม่ใช่เนื้อหา)
+  favicon.*, apple-touch-icon.png, robots.txt, sitemap.xml
+content/                    เนื้อหา: ที่ Pages CMS แก้ได้ (บันทึกลง repo โดยตรง)
+  articles/<slug>.md        บทความ 1 เรื่อง = 1 ไฟล์ (front matter + Markdown + คำสั่งย่อด้านล่าง)
+  data/site.json            ชื่อ อีเมล GitHub รูป + ข้อความแนะนำตัว/หน้าเกี่ยวกับฉัน (bio, intro, about_*, interests, path, tools)
+  data/projects.json, certificates.json, activities.json, awards.json (stats + items), glossary.json, mechanism.json
+media/                      รูปต้นฉบับที่อัปโหลดจาก CMS: covers, articles, projects, certificates, activities, profile
+scripts/                    สคริปต์ build และเครื่องมือ (เฟส 13; check-site.py / optimize-images.py / prepare-deploy.py ยังเขียนสำหรับโครงสร้างเก่า)
+_site/                      ผลลัพธ์ build (ห้าม commit)
 ```
+
+ผลลัพธ์ที่ build แล้วต้องมีหน้าตา **เหมือนโครงสร้างเก่า** เพราะโค้ดใน `src/assets/js` ยังอ้าง path ของผลลัพธ์: `data/*.json` (build รวม `content/data/*.json` + `src/data/i18n.json` + `data/articles.json` ที่สร้างจาก front matter), `assets/img/<โฟลเดอร์>/<ไฟล์>.webp` (build ย่อรูปจาก `media/<โฟลเดอร์>/`), `articles/<slug>.html` (สร้างจาก .md) ดังนั้นในกฎด้านล่าง path ที่ขึ้นต้นด้วย `data/` หรือ `assets/` หมายถึง **ในผลลัพธ์ที่ build แล้ว** ต้นทางคือ `content/data/`, `src/data/`, `src/assets/`, `media/` **ระหว่างที่เฟส 13 ยังไม่เสร็จ เว็บใน `src/` ยังเปิดตรงๆ ไม่ได้**
+
+### รูปแบบบทความ (`content/articles/<slug>.md`)
+
+front matter: `title`, `dek`, `category` (medicine|biotech|bioinformatics|ai|notes), `date` (ค.ศ. เช่น 2026-11 หรือ 2026-11-09), `status` (draft|published), `featured`, `covers` (`type`: helix|fold|image, `src`, `alt`, `caption`, `credit`), `references` (รายการข้อความ), `title_en`, `dek_en` (ไม่บังคับ) และช่องเสริมที่ไม่บังคับ (ข้อความที่เดิมอยู่ในหน้าอยู่แล้ว) `short_title` (ชื่อใน `<title>`), `lead` (ข้อความใต้หัวเรื่องในหน้าบทความ), `description` (meta/og) ถ้าไม่ใส่ build ใช้ `title`/`dek` แทน
+
+เนื้อหาเป็น Markdown + คำสั่งย่อ (ห้ามเขียน HTML ในไฟล์ .md):
+- `## หัวข้อ {#id}` / `### หัวข้อ {#id}` หัวข้อพร้อม id (ไม่ใส่ {#id} ให้ build สร้างให้) ตาราง = ตาราง GFM บล็อกอ้างอิง `> ...` = ประโยคเด่น (`.pull`) ย่อหน้าที่มีแค่ `[ ... ]` = ช่องรอข้อมูล (`.todo`)
+- `[[key|ข้อความ]]` คำศัพท์จาก glossary.json (build เป็น `<button class="term" data-term="key">`)
+- `{{mech}}` แผนภาพกลไก CRISPR (build เป็น `<div data-mech></div>`)
+- `{{figure src="..." alt="..." caption="..." credit="..."}}` รูปพร้อมคำบรรยาย (build ต่อเป็น "คำบรรยาย · ภาพ: เครดิต" src ว่าง = ช่องรอรูป)
+- `{{duo}} ... {{/duo}}` กล่องเปรียบเทียบสองฝั่ง คั่นสองฝั่งด้วยบรรทัด `---` แต่ละฝั่งขึ้นต้นด้วยบรรทัดตัวหนา `**ป้าย**` ตามด้วยข้อความ (ป้ายฝั่งแรกเป็นสี accent)
+- ห้ามแก้หรือเติมเนื้อหาบทความเอง รายการอ้างอิงอยู่ที่ `references` ไม่ใช่ท้ายเนื้อหา
 
 ## ข้อตกลงในโค้ด
 
