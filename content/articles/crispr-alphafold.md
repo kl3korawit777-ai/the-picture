@@ -7,15 +7,11 @@ date: 2026-11-09
 status: published
 featured: true
 covers:
-  - type: helix
-    caption: CRISPR-Cas9 แก้ไข DNA ได้ตรงตำแหน่งที่ต้องการ
-  - type: fold
-    caption: ภาพประกอบโครงสร้างโปรตีน ระบายสีตามค่าความมั่นใจ (pLDDT) แบบเดียวกับที่
-      AlphaFold ใช้
   - type: image
+    src: /media/covers/mw8ztqep-imgyhwfc.jpg
     alt: "-"
-    caption: "[คำบรรยายภาพปกของคุณ]"
-    credit: "[เครดิตภาพ]"
+    caption: CRISPR-Cas9 Gene Editing Modifying DNA Strand
+    credit: stock.adobe.com
 references:
   - "[แหล่งอ้างอิง 1]"
   - "[แหล่งอ้างอิง 2]"
