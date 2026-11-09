@@ -9,17 +9,18 @@ featured: true
 covers:
   - type: image
     src: /media/covers/mw8ztqep-imgyhwfc.jpg
-    alt: "-"
+    alt: CRISPR-Cas9 Gene Editing Modifying DNA Strand
     caption: CRISPR-Cas9 Gene Editing Modifying DNA Strand
     credit: stock.adobe.com
   - type: image
     src: /media/covers/mw8zx9e5-kikz3aku.jpg
-    alt: "-"
+    alt: CRISPR-CAS9 gene editing complex from Streptococcus pyogenes.
     caption: CRISPR-CAS9 gene editing complex from Streptococcus pyogenes.
     credit: stock.adobe.com
   - type: image
     src: /media/covers/mw8zzol9-s76jpwxo.jpg
-    alt: "-"
+    alt: 3D rendering of E3 ubiquitin-protein ligase HECTD1 as predicted by
+      alphafold and colored according to confidence in the model.
     caption: 3D rendering of E3 ubiquitin-protein ligase HECTD1 as predicted by
       alphafold and colored according to confidence in the model.
     credit: stock.adobe.com
