@@ -76,6 +76,8 @@ async function processMedia() {
       const key = `${folder.name}/${base}`;
       if (mediaSrc.has(key)) { err(`media/${folder.name}: "${base}" exists with two different extensions`); continue; }
       mediaSrc.set(key, file);
+      const mb = fs.statSync(file).size / 1048576;
+      if (mb > 5) warn(`media/${folder.name}/${f} is ${mb.toFixed(1)} MB: the site only uses a 1600 px copy, so resize it before uploading (every upload stays in the repository's history for good)`);
       const dir = path.join(OUT, 'assets/img', folder.name);
       fs.mkdirSync(dir, { recursive: true });
       const input = sharp(file).rotate();                                   /* rotate(): apply EXIF orientation; output has no metadata */
@@ -110,6 +112,11 @@ function normaliseImages(file, data) {
     const v = holder && typeof holder[key] === 'string' ? holder[key].trim() : '';
     if (!v || isUrl(v)) return;
     const fixed = mediaName(folder, v);
+    const label = `content/data/${file}${Array.isArray(data) ? ` #${i + 1}` : ''}`;
+    if (fixed) {                                                    /* a picture needs a description (alt) and a credit */
+      if (!String(holder.alt || '').trim()) warn(`${label}: picture "${v}" has no alt text (the page falls back to the title; write a real description)`);
+      if (!String(holder.credit || '').trim()) warn(`${label}: picture "${v}" has no credit`);
+    }
     if (fixed) holder[key] = fixed; else warn(`content/data/${file}${Array.isArray(data) ? ` #${i + 1}` : ''}: ${k} "${v}" is not in media/${folder}/ (the page shows the [ ] placeholder)`);
   }));
 }
