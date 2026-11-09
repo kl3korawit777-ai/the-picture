@@ -19,9 +19,11 @@
 <link rel="preload" href="data/site.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="data/articles.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="data/projects.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="data/gallery.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="data/certificates.json" as="fetch" crossorigin="anonymous">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/interactive.css">
+<link rel="stylesheet" href="assets/css/covers.css">
 <link rel="stylesheet" href="assets/css/certificates.css">
 </head>
 <body>
@@ -56,6 +58,8 @@
 <p data-site="intro"></p>
 <div class="actions"><a class="btn btn-line" href="about.html" data-i18n="pf.about">เกี่ยวกับฉัน</a></div>
 </div>
+<!-- รูปภาพข้างชื่อ: เลื่อนสลับได้เหมือนภาพปกบทความ สร้างจาก content/data/gallery.json (รูปอยู่ใน media/gallery/) ยังไม่มีรูป = ช่องรอรูป -->
+<figure class="photo"><div data-gallery></div><figcaption class="photo-cap" data-gallery-cap></figcaption></figure>
 </section>
 
 <!-- data-hash: ปุ่มเวอร์ชันผูกกับ URL  portfolio.html#chem  และ  portfolio.html#bio  (ส่งลิงก์นี้ให้กรรมการได้ คัดลอกจากช่องที่อยู่ของเบราว์เซอร์) -->
@@ -129,6 +133,7 @@
 
 <button type="button" class="to-top" hidden aria-label="กลับขึ้นด้านบน" data-i18n-aria="aria.toTop"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path class="arrow" d="M24 31V17M18 23l6-6 6 6"/></svg></button>
 
+<script src="assets/js/covers.js"></script>
 <script src="assets/js/certificates.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/interactive.js"></script>

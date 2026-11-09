@@ -148,7 +148,8 @@
     "type.webapp": "Web App",
     "type.website": "Website",
     "zoom.label": "ขยายภาพ",
-    "act.placeholder": "[ภาพกิจกรรม]"
+    "act.placeholder": "[ภาพกิจกรรม]",
+    "gallery.placeholder": "[รูปภาพ]"
   },
   "en": {
     "ab.contact": "Get in touch",
@@ -299,6 +300,7 @@
     "type.webapp": "Web App",
     "type.website": "Website",
     "zoom.label": "Enlarge image",
-    "act.placeholder": "[Activity photo]"
+    "act.placeholder": "[Activity photo]",
+    "gallery.placeholder": "[Pictures]"
   }
 }

@@ -172,7 +172,7 @@
       if (window.console) console.warn('Cover image not found: ' + src);
       host.textContent = ''; host.appendChild(placeholder());
     };
-    if (/assets\/img\/covers\/[^\/]+\.webp$/.test(src)) {      /* a built picture: name.webp (1600 px) and name-800.webp */
+    if (/assets\/img\/(covers|gallery)\/[^\/]+\.webp$/.test(src)) {      /* a built picture: name.webp (1600 px) and name-800.webp */
       im.srcset = src.replace(/\.webp$/, '-800.webp') + ' 800w, ' + src + ' 1600w';
       im.sizes = '(max-width: 900px) 100vw, 900px';
     }
@@ -181,13 +181,13 @@
   }
 
   /* ---------- mount ---------- */
-  /* options: wide (21:9 instead of 16:9), link() -> <a> that wraps each slide (home page), captionEl -> <figcaption> to keep in step */
+  /* options: wide (21:9 instead of 16:9), portrait (4:5, the portfolio picture frame), link() -> <a> that wraps each slide (home page), captionEl -> <figcaption> to keep in step */
   function mount(host, covers, options) {
     options = options || {};
     var list = normalise(covers), multi = list.length > 1;
     var W = options.wide ? 900 : 600, H = options.wide ? 386 : 338;
     host.textContent = '';
-    host.className = 'slider' + (options.wide ? ' wide' : '') + (multi ? '' : ' single');
+    host.className = 'slider' + (options.wide ? ' wide' : '') + (options.portrait ? ' portrait' : '') + (multi ? '' : ' single');
     if (multi) {
       host.setAttribute('role', 'group');
       host.setAttribute('aria-roledescription', 'carousel');

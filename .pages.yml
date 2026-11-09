@@ -47,6 +47,12 @@ media:
     output: /media/profile
     extensions: [jpg, jpeg, png, webp]
     rename: random
+  - name: gallery
+    label: รูปสไลด์หน้าพอร์ตโฟลิโอ
+    input: media/gallery
+    output: /media/gallery
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
 
 # ------------------------------------------------------------------ ชุดช่องที่ใช้ซ้ำ
 components:
@@ -293,6 +299,36 @@ content:
         label: อักษรย่อบนการ์ด
         type: string
         description: "ตัวอักษร 1–2 ตัวที่ขึ้นในกรอบสีบนการ์ด เช่น Nx"
+
+  # ---------------------------------------------------------------- รูปสไลด์หน้าพอร์ตโฟลิโอ
+  - name: gallery
+    label: รูปสไลด์หน้าพอร์ตโฟลิโอ
+    type: file
+    path: content/data/gallery.json
+    format: json
+    list: true
+    description: "รูปในกรอบข้างชื่อที่หัวหน้าพอร์ตโฟลิโอ ใส่หลายรูปจะเลื่อนสลับเองทุก 5 วินาที (มีลูกศร จุด และปัดได้) ใส่รูปเดียวเป็นภาพนิ่ง ยังไม่มีรูปจะเป็นช่องรอรูป กรอบเป็นแนวตั้งสัดส่วน 4:5 ควรใช้รูปแนวตั้ง"
+    fields:
+      - name: image
+        label: รูป
+        type: image
+        description: "อัปโหลดหรือเลือกรูป (แนวตั้ง 4:5 กว้างอย่างน้อย 800 px) รูปที่เป็นแนวนอนจะถูกครอบตรงกลาง"
+        options:
+          media: gallery
+      - name: alt
+        label: คำอธิบายรูป (alt)
+        type: string
+        required: true
+        description: "บอกว่าในรูปเห็นอะไร สำหรับคนที่มองไม่เห็นรูป (บังคับ)"
+      - name: caption
+        label: คำบรรยาย
+        type: string
+        description: "ข้อความเล็กใต้รูป เว้นว่างได้"
+      - name: credit
+        label: เครดิต
+        type: string
+        required: true
+        description: "ใครถ่ายภาพ/แหล่งที่มา เช่น 'ภาพ: กรวิชญ์ บัวดำ' (บังคับ)"
 
   # ---------------------------------------------------------------- เกียรติบัตร
   - name: certificates

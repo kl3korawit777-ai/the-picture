@@ -4,6 +4,7 @@
 
 .slider { position: relative; max-width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--tint-2); aspect-ratio: 16 / 9; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .slider.wide { aspect-ratio: 21 / 9; border-radius: 24px; }
+.slider.portrait { aspect-ratio: 4 / 5; border-radius: 28px; }          /* the portfolio picture frame (same size as the old profile photo) */
 @media (max-width: 600px) {
   .slider.wide, .cover .helix { aspect-ratio: 16 / 10; }     /* the plain helix inside .cover is the fallback shown before the slider is built: same size, so nothing jumps */
 }

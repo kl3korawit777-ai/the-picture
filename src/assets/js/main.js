@@ -48,6 +48,7 @@
   loadData('site', true);
   if (document.querySelector('[data-certificates]')) loadData('certificates');
   if (document.querySelector('[data-award-list]')) loadData('awards', true);
+  if (document.querySelector('[data-gallery]')) loadData('gallery');
   if (document.querySelector('[data-activities]')) loadData('activities');
   if (document.querySelector('.term[data-term]')) loadData('glossary');       /* article components (glossary.js, mechanism.js) */
   if (document.querySelector('[data-mech]')) loadData('mechanism', true);
@@ -551,6 +552,17 @@
       initSlots(host);
       refilter();
     }
+    /* portfolio picture slider (next to the name): content/data/gallery.json -> the same slider as the article covers, in a portrait frame */
+    function renderGallery(list) {
+      var host = document.querySelector('[data-gallery]');
+      if (!host) return;
+      var items = list.filter(function (c) { return c && String(c.image || '').trim(); }).map(function (c) {
+        return { type: 'image', src: 'assets/img/gallery/' + String(c.image).trim(), alt: c.alt, caption: c.caption, credit: c.credit, alt_en: c.alt_en, caption_en: c.caption_en, credit_en: c.credit_en };
+      });
+      host.textContent = '';
+      if (!items.length || !TP.covers) { host.appendChild(bk(mk('div', 'ph'), 'gallery.placeholder')); return; }       /* no pictures yet: the [ ] slot */
+      TP.covers.mount(host, items, { portrait: true, captionEl: document.querySelector('[data-gallery-cap]') });
+    }
     function renderAbout(s) {
       var ints = document.querySelector('[data-interests]');
       if (ints) { ints.textContent = ''; (s.interests || []).forEach(function (w) { var e = mk('span'); e.textContent = w; ints.appendChild(e); }); }
@@ -744,6 +756,7 @@
     if (document.querySelector('[data-certificates]')) {
       loadData('certificates').then(renderCertificates).catch(showError);
     }
+    if (document.querySelector('[data-gallery]')) loadData('gallery').then(renderGallery).catch(showError);
     if (document.querySelector('[data-award-list]')) loadData('awards', true).then(renderAwards).catch(showError);
     if (document.querySelector('[data-activities]')) loadData('activities').then(renderActivities).catch(showError);
 

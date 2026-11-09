@@ -324,6 +324,11 @@ html.has-lightbox { overflow: hidden; }
 .hero-split .copy .actions { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; }
 .hero-split .photo { flex: 1 1 280px; max-width: 340px; min-width: 0; }
 .photo .ph { aspect-ratio: 4 / 5; border-radius: 28px; max-width: 100%; }
+.hero-split .photo { margin: 0; }
+.hero-split .photo > [data-gallery]:empty { aspect-ratio: 4 / 5; }       /* keep the frame's size until the slider is drawn */
+.photo-cap { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.photo-cap:empty { display: none; }
+.photo-cap .credit { display: block; margin-top: 2px; }
 .photo.round { max-width: 400px; }
 .photo.round .ph { aspect-ratio: 1 / 1; border-radius: 999px; }
 

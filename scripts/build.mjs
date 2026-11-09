@@ -102,7 +102,7 @@ function imgUrl(folder, file, prefix) { return `${prefix}assets/img/${folder}/${
 const DATA_DIR = P('content/data');
 const dataOut = path.join(OUT, 'data');
 fs.mkdirSync(dataOut, { recursive: true });
-const IMAGE_FIELDS = { 'site.json': ['profile', ['photo']], 'certificates.json': ['certificates', ['image']], 'activities.json': ['activities', ['image']], 'projects.json': ['projects', ['image']] };
+const IMAGE_FIELDS = { 'site.json': ['profile', ['photo']], 'certificates.json': ['certificates', ['image']], 'activities.json': ['activities', ['image']], 'projects.json': ['projects', ['image']], 'gallery.json': ['gallery', ['image']] };
 function normaliseImages(file, data) {
   const spec = IMAGE_FIELDS[file]; if (!spec) return;
   const [folder, fields] = spec;
