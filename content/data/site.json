@@ -33,18 +33,23 @@
     {
       "state": "now",
       "stage": "ตอนนี้",
-      "title": "เตรียมสอบ TCAS70",
-      "sub": "มุ่งสู่คณะแพทยศาสตร์ผ่าน กสพท."
+      "title": "ม.ปลาย",
+      "sub": "กำลังศึกษาในระดับ ม.ปลาย"
     },
     {
       "state": "next",
       "stage": "ต่อไป",
+      "title": "ปริญญาตรี",
+      "sub": "Biotechnology"
+    },
+    {
+      "stage": "อนาคต",
       "title": "ปริญญาโท",
       "sub": "Bioinformatics หรือ Medical Biotechnology"
     },
     {
       "stage": "อนาคต",
-      "title": "สิ่งที่อยากทำในอนาคต",
+      "title": "ความฝัน",
       "sub": "ก่อตั้งสตาร์ตอัปด้าน Biotech "
     }
   ]
