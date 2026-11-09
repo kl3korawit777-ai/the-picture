@@ -1,0 +1,680 @@
+# Pages CMS (app.pagescms.org): ตั้งค่าให้แก้เนื้อหาของ The Picture ผ่านหน้าเว็บ แล้วบันทึกลง repo นี้โดยตรง
+# เอกสารการตั้งค่า: https://pagescms.org/docs/configuration
+#
+# หลักการ: แก้ได้เฉพาะ content/ (บทความ + ข้อมูล JSON) และ media/ (รูป) ส่วน src/ เป็นของนักพัฒนา
+# เมื่อบันทึก GitHub Actions จะ build (scripts/build.mjs) และ deploy ขึ้น GitHub Pages ให้เอง
+#
+# ข้อควรรู้ (Pages CMS เขียนไฟล์ใหม่ตามช่องที่ประกาศไว้เท่านั้น): ช่องไหนที่ไม่ได้ประกาศในไฟล์นี้จะหายไปจากไฟล์ข้อมูลตอนบันทึก
+# ถ้าเพิ่มช่องใหม่ใน content/data/*.json ต้องเพิ่มช่องนั้นที่นี่ด้วย (scripts/check-pages-config.mjs ตรวจให้)
+
+# ------------------------------------------------------------------ รูป
+# อัปโหลดแล้วไปอยู่ใน media/<ประเภท>/ ชื่อไฟล์ถูกสุ่มใหม่ (กันปัญหาชื่อภาษาไทย/ชื่อซ้ำ) รับเฉพาะ jpg, jpeg, png, webp
+# build จะย่อเป็น WebP 800 และ 1600 px ให้เอง จึงอัปโหลดไฟล์ใหญ่ได้เลย (ควรกว้างอย่างน้อย 1600 px สำหรับรูปปก)
+media:
+  - name: covers
+    label: รูปปกบทความ
+    input: media/covers
+    output: /media/covers
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
+  - name: articles
+    label: รูปในเนื้อหาบทความ
+    input: media/articles
+    output: /media/articles
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
+  - name: projects
+    label: รูปโปรเจกต์
+    input: media/projects
+    output: /media/projects
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
+  - name: certificates
+    label: รูปเกียรติบัตร
+    input: media/certificates
+    output: /media/certificates
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
+  - name: activities
+    label: รูปกิจกรรม
+    input: media/activities
+    output: /media/activities
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
+  - name: profile
+    label: รูปโปรไฟล์
+    input: media/profile
+    output: /media/profile
+    extensions: [jpg, jpeg, png, webp]
+    rename: random
+
+# ------------------------------------------------------------------ ชุดช่องที่ใช้ซ้ำ
+components:
+  repair:
+    type: object
+    fields:
+      - name: label
+        label: ชื่อวิธีซ่อมแซม
+        type: string
+        description: "ชื่อที่ขึ้นบนการ์ด เช่น NHEJ (non-homologous end joining)"
+      - name: desc
+        label: คำอธิบายบนการ์ด
+        type: text
+        description: "ประโยคสั้นๆ ใต้ชื่อบนการ์ด"
+      - name: desc_en
+        label: คำอธิบายบนการ์ด (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ ถ้าเว้นว่างจะแสดงข้อความไทย"
+      - name: caption
+        label: คำบรรยายใต้แผนภาพ
+        type: text
+        description: "ข้อความที่ขึ้นใต้แผนภาพตอนอยู่ขั้นที่ 3 ด้วยวิธีนี้"
+      - name: caption_en
+        label: คำบรรยายใต้แผนภาพ (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+
+# ------------------------------------------------------------------ เนื้อหา
+content:
+  # ---------------------------------------------------------------- บทความ
+  - name: articles
+    label: บทความ
+    type: collection
+    path: content/articles
+    format: yaml-frontmatter
+    subfolders: false
+    # ชื่อไฟล์ = ที่อยู่ของบทความ (articles/<ชื่อไฟล์>.html) ต้องเป็น a-z 0-9 และ - เท่านั้น
+    # ตอนสร้างบทความใหม่ ระบบเสนอชื่อไฟล์จากชื่อเรื่องให้ ถ้าชื่อเรื่องเป็นภาษาไทยให้แก้ช่องชื่อไฟล์เป็นภาษาอังกฤษ เช่น organoid-intro.md
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      fields: [title, category, status, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: ชื่อเรื่อง
+        type: string
+        required: true
+        description: "ชื่อเรื่องเต็ม แสดงเป็นหัวข้อของบทความ"
+      - name: dek
+        label: คำโปรย
+        type: text
+        description: "คำโปรย: 1–2 ประโยคที่แสดงบนการ์ดบทความในหน้าแรกและในผลการค้นหา"
+      - name: category
+        label: หมวด
+        type: select
+        required: true
+        description: "เลือกหมวดของบทความ (ต้องเลือกก่อนเผยแพร่)"
+        options:
+          values:
+            - name: medicine
+              label: Medicine (การแพทย์)
+            - name: biotech
+              label: Biotech (เทคโนโลยีชีวภาพ)
+            - name: bioinformatics
+              label: Bioinformatics
+            - name: ai
+              label: AI & Tech
+            - name: notes
+              label: Study Notes (สรุปเรียน)
+      - name: date
+        label: วันที่เผยแพร่
+        type: date
+        required: true
+        description: "วันที่ (ค.ศ.) ระบบแสดงเป็น พ.ศ. ให้เองในหน้าเว็บ ใช้เรียงบทความจากใหม่ไปเก่า"
+        options:
+          format: yyyy-MM-dd
+      - name: status
+        label: สถานะ
+        type: select
+        required: true
+        description: "ฉบับร่าง = เปิดดูได้ที่ /drafts/<ชื่อไฟล์>.html เท่านั้น ไม่ขึ้นหน้าแรก ไม่ขึ้นการค้นหา และไม่อยู่ใน sitemap / เผยแพร่ = ขึ้นเว็บ"
+        options:
+          values:
+            - name: draft
+              label: ฉบับร่าง (ยังไม่เผยแพร่)
+            - name: published
+              label: เผยแพร่
+      - name: featured
+        label: บทความเด่น
+        type: boolean
+        description: "เปิด = เป็นบทความเด่นที่หน้าแรก (ใช้บทความล่าสุดที่เปิดอันเดียว)"
+      - name: covers
+        label: ภาพปก (สไลด์)
+        type: block
+        list: true
+        blockKey: type
+        description: "ภาพปกบนหัวบทความ ใส่หลายอันจะเป็นสไลด์ ใส่อันเดียวเป็นภาพนิ่ง ลำดับบนสุดแสดงก่อน กด 'เพิ่ม' แล้วเลือกชนิด"
+        blocks:
+          - name: helix
+            label: เกลียว DNA (ภาพเคลื่อนไหว ไม่ต้องใช้รูป)
+            fields:
+              - name: caption
+                label: คำบรรยาย
+                type: string
+                description: "ข้อความใต้ภาพ"
+              - name: credit
+                label: เครดิต
+                type: string
+                description: "ภาพวาดโดยระบบ เว้นว่างได้"
+          - name: fold
+            label: ภาพโปรตีนระบายสี pLDDT (ไม่ต้องใช้รูป)
+            fields:
+              - name: caption
+                label: คำบรรยาย
+                type: string
+                description: "ข้อความใต้ภาพ"
+              - name: credit
+                label: เครดิต
+                type: string
+                description: "ภาพวาดโดยระบบ เว้นว่างได้"
+          - name: image
+            label: รูปภาพจริง
+            fields:
+              - name: src
+                label: รูป
+                type: image
+                description: "อัปโหลดหรือเลือกรูปปก (แนะนำสัดส่วน 21:9 หรือ 16:9 กว้างอย่างน้อย 1600 px)"
+                options:
+                  media: covers
+              - name: alt
+                label: คำอธิบายรูป (alt)
+                type: string
+                required: true
+                description: "บอกว่าในรูปเห็นอะไร สำหรับคนที่มองไม่เห็นรูป ไม่ใช่ชื่อไฟล์ (บังคับ)"
+              - name: caption
+                label: คำบรรยาย
+                type: string
+                description: "ข้อความใต้ภาพ"
+              - name: credit
+                label: เครดิต
+                type: string
+                required: true
+                description: "ใครเป็นเจ้าของ/มาจากไหน เช่น 'ภาพ: กรวิชญ์ บัวดำ' หรือชื่อผู้สร้างและสัญญาอนุญาต (บังคับ)"
+      - name: references
+        label: แหล่งอ้างอิง
+        type: string
+        list: true
+        description: "1 ช่อง = 1 รายการ แสดงเป็นรายการเลขท้ายบทความ ใส่ลิงก์ได้แบบ [ชื่อ](https://...)"
+      - name: title_en
+        label: ชื่อเรื่อง (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ ใช้ตอนผู้อ่านเลือก EN ถ้าเว้นว่างจะแสดงชื่อไทย"
+      - name: dek_en
+        label: คำโปรย (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: short_title
+        label: ชื่อสั้น (แท็บเบราว์เซอร์)
+        type: string
+        description: "ไม่บังคับ ชื่อสั้นที่ขึ้นบนแท็บเบราว์เซอร์ ถ้าเว้นว่างใช้ชื่อเรื่อง"
+      - name: lead
+        label: ข้อความใต้ชื่อเรื่อง
+        type: text
+        description: "ไม่บังคับ ข้อความใต้หัวข้อในหน้าบทความ ถ้าเว้นว่างใช้คำโปรย"
+      - name: description
+        label: คำอธิบายสำหรับแชร์ลิงก์
+        type: text
+        description: "ไม่บังคับ ข้อความที่ขึ้นเมื่อแชร์ลิงก์ (Facebook, LINE ฯลฯ) และบน Google ถ้าเว้นว่างใช้คำโปรย"
+      - name: body
+        label: เนื้อหา
+        type: code
+        description: |
+          เขียนเป็น Markdown: ## หัวข้อหลัก, ### หัวข้อย่อย (ต่อท้ายด้วย {#id} ถ้าต้องการลิงก์ตรงหัวข้อ), **ตัวหนา**, > ข้อความเด่น, ตาราง |a|b|
+          คำสั่งย่อ (พิมพ์ตามนี้ทุกตัวอักษร):
+          • [[key|ข้อความ]] = คำศัพท์ที่มีกล่องอธิบาย key ต้องมีในเมนู 'คำศัพท์' เช่น [[pam|PAM]] (ในตารางให้เขียน [[pam\|PAM]])
+          • {{mech}} = แผนภาพกลไก CRISPR-Cas9
+          • {{figure src="ไฟล์.jpg" alt="อธิบายรูป" caption="คำบรรยาย" credit="ผู้สร้าง"}} = รูปในเนื้อหา อัปโหลดที่เมนูรูป 'รูปในเนื้อหาบทความ' ก่อน แล้วใส่ชื่อไฟล์ alt และ credit บังคับ
+          • {{duo}} **ป้ายซ้าย** ข้อความ --- **ป้ายขวา** ข้อความ {{/duo}} = กล่องเปรียบเทียบสองฝั่ง (แต่ละส่วนอยู่คนละบรรทัด คั่นด้วยบรรทัด ---)
+          ย่อหน้าที่มีแค่ [ข้อความในวงเล็บ] คือช่องที่ยังรอข้อมูลจริง
+        options:
+          format: markdown
+
+  # ---------------------------------------------------------------- โปรเจกต์
+  - name: projects
+    label: โปรเจกต์
+    type: file
+    path: content/data/projects.json
+    format: json
+    list: true
+    description: "การ์ดในหน้าโปรเจกต์ (หมายเหตุ: โปรเจกต์ใหม่ต้องมีไฟล์หน้า src/projects/<slug>.html ด้วย ให้นักพัฒนาสร้างให้ ไม่งั้นการ์ดจะลิงก์ไปหน้าที่ไม่มี)"
+    fields:
+      - name: slug
+        label: ที่อยู่ของโปรเจกต์ (slug)
+        type: string
+        required: true
+        pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+        description: "ภาษาอังกฤษพิมพ์เล็ก ตัวเลข และ - เท่านั้น ต้องตรงกับชื่อไฟล์หน้า projects/<slug>.html"
+      - name: name
+        label: ชื่อโปรเจกต์
+        type: string
+        required: true
+        description: "ชื่อที่ขึ้นบนการ์ดและหัวหน้าโปรเจกต์"
+      - name: desc_th
+        label: คำอธิบาย (ไทย)
+        type: text
+        description: "1–2 ประโยคบนการ์ด"
+      - name: desc_en
+        label: คำอธิบาย (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: types
+        label: ประเภท
+        type: select
+        options:
+          multiple: true
+          values:
+            - name: website
+              label: Website
+            - name: webapp
+              label: Web App
+            - name: ai
+              label: AI
+        description: "เลือกได้หลายประเภท ใช้กรองในหน้าโปรเจกต์"
+      - name: tags
+        label: แท็ก
+        type: string
+        list: true
+        description: "คำสั้นๆ ที่ขึ้นบนการ์ด เช่น Cell Biology"
+      - name: url
+        label: ลิงก์เว็บจริง
+        type: string
+        description: "https://... เว้นว่างได้ (ปุ่มจะขึ้นว่า 'เร็วๆ นี้')"
+      - name: github
+        label: ลิงก์ GitHub
+        type: string
+        description: "https://github.com/... เว้นว่างได้"
+      - name: thumb
+        label: อักษรย่อบนการ์ด
+        type: string
+        description: "ตัวอักษร 1–2 ตัวที่ขึ้นในกรอบสีบนการ์ด เช่น Nx"
+
+  # ---------------------------------------------------------------- เกียรติบัตร
+  - name: certificates
+    label: เกียรติบัตร
+    type: file
+    path: content/data/certificates.json
+    format: json
+    list: true
+    description: "ถ้ามี 4 ใบขึ้นไป หน้าพอร์ตโฟลิโอจะแสดงเป็นแถบเลื่อน ต่ำกว่านั้นเป็นกริด ลบรายการว่างที่เป็นช่องรอข้อมูลออกเมื่อใส่ของจริงแล้ว"
+    fields:
+      - name: title
+        label: ชื่อรายการ
+        type: string
+        description: "เช่น ชื่อการแข่งขันหรือกิจกรรม"
+      - name: title_en
+        label: ชื่อรายการ (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ"
+      - name: year
+        label: ปี (ค.ศ.)
+        type: string
+        pattern:
+          regex: "^(\\d{4})?$"
+          message: "ใส่ปี ค.ศ. 4 หลัก เช่น 2025 (หน้าเว็บแสดงเป็น พ.ศ. ให้เอง)"
+        description: "ปี ค.ศ. 4 หลัก เช่น 2025"
+      - name: image
+        label: รูปเกียรติบัตร
+        type: image
+        description: "อัปโหลดหรือเลือกรูปเกียรติบัตร"
+        options:
+          media: certificates
+      - name: alt
+        label: คำอธิบายรูป (alt)
+        type: string
+        required: true
+        description: "บอกว่าเป็นเกียรติบัตรอะไร จากใคร สำหรับคนที่มองไม่เห็นรูป (บังคับ)"
+      - name: credit
+        label: เครดิต
+        type: string
+        required: true
+        description: "ผู้ออกเกียรติบัตร/แหล่งที่มาของรูป (บังคับ)"
+
+  # ---------------------------------------------------------------- กิจกรรม
+  - name: activities
+    label: กิจกรรม (ห้องปฏิบัติการและกิจกรรม)
+    type: file
+    path: content/data/activities.json
+    format: json
+    list: true
+    description: "การ์ดในส่วน 'ห้องปฏิบัติการและกิจกรรม' ของหน้าพอร์ตโฟลิโอ"
+    fields:
+      - name: cat
+        label: เวอร์ชันพอร์ตโฟลิโอ
+        type: string
+        description: "bio = แสดงในเวอร์ชันชีววิทยา, chem = เคมี, ใส่ทั้งคู่คั่นด้วยเว้นวรรค (bio chem) ค่าอื่นๆ (เช่น physics, stem) จะแสดงเมื่อไม่ได้เลือกเวอร์ชัน"
+      - name: kicker
+        label: ป้ายเล็กบนหัวการ์ด
+        type: string
+        description: "คำสั้นๆ เช่น Lab, Experiment, STEM"
+      - name: title
+        label: ชื่อกิจกรรม
+        type: string
+        required: true
+        description: "ชื่อกิจกรรมที่ขึ้นบนการ์ด"
+      - name: title_en
+        label: ชื่อกิจกรรม (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ"
+      - name: text
+        label: คำอธิบาย
+        type: text
+        description: "1–2 ประโยค ทำอะไร ได้อะไร"
+      - name: text_en
+        label: คำอธิบาย (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: image
+        label: รูปกิจกรรม
+        type: image
+        description: "อัปโหลดหรือเลือกรูปกิจกรรม"
+        options:
+          media: activities
+      - name: alt
+        label: คำอธิบายรูป (alt)
+        type: string
+        required: true
+        description: "บอกว่าในรูปเห็นอะไร สำหรับคนที่มองไม่เห็นรูป (บังคับ)"
+      - name: credit
+        label: เครดิต
+        type: string
+        required: true
+        description: "ใครถ่ายภาพ/แหล่งที่มา เช่น 'ภาพ: กรวิชญ์ บัวดำ' (บังคับ)"
+
+  # ---------------------------------------------------------------- รางวัล
+  - name: awards
+    label: รางวัล (สถิติเด่นและรายการรางวัล)
+    type: file
+    path: content/data/awards.json
+    format: json
+    fields:
+      - name: stats
+        label: สถิติเด่น (กล่องใหญ่ใต้ปุ่มเวอร์ชัน)
+        type: object
+        list: true
+        description: "ปกติ 3 กล่อง ตัวเลขหรือข้อความสั้นๆ พร้อมคำอธิบาย"
+        fields:
+          - name: big
+            label: ข้อความใหญ่
+            type: string
+            description: "เช่น 3 ปี หรือ รองฯ 2"
+          - name: big_en
+            label: ข้อความใหญ่ (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+          - name: what
+            label: คำอธิบาย
+            type: string
+            description: "เช่น สอบแข่งขันเคมี ระดับจังหวัด"
+          - name: what_en
+            label: คำอธิบาย (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+      - name: items
+        label: รายการรางวัล
+        type: object
+        list: true
+        description: "เรียงตามที่ต้องการแสดง"
+        fields:
+          - name: cat
+            label: เวอร์ชันพอร์ตโฟลิโอ
+            type: string
+            description: "chem = เคมี, bio = ชีววิทยา, ใส่ทั้งคู่คั่นด้วยเว้นวรรค (chem bio) ใช้กรองด้วยปุ่มเวอร์ชันในหน้าพอร์ตโฟลิโอ"
+          - name: when
+            label: เมื่อไหร่
+            type: string
+            description: "ปี ค.ศ. 4 หลัก (แสดงเป็น พ.ศ. ให้เอง) หรือข้อความ เช่น '3 ปีต่อเนื่อง' ยังไม่มีข้อมูลให้เว้น [ปี] ไว้"
+          - name: when_en
+            label: เมื่อไหร่ (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ ใช้เมื่อข้อความไม่ใช่ปี"
+          - name: title
+            label: ชื่อรางวัล
+            type: string
+            required: true
+            description: "เช่น รองชนะเลิศอันดับ 2 สอบแข่งขันเคมี"
+          - name: title_en
+            label: ชื่อรางวัล (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+          - name: sub
+            label: รายละเอียด
+            type: string
+            description: "บรรทัดเล็กใต้ชื่อ เช่น ระดับจังหวัด หรือชื่อรายการแข่งขัน"
+          - name: sub_en
+            label: รายละเอียด (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+
+  # ---------------------------------------------------------------- คำศัพท์
+  - name: glossary
+    label: คำศัพท์
+    type: file
+    path: content/data/glossary.json
+    format: json
+    list: true
+    description: "คำที่มีกล่องอธิบายตอนเอาเมาส์ชี้/แตะในบทความ ใช้ในเนื้อหาด้วย [[key|คำ]]"
+    fields:
+      - name: key
+        label: รหัสคำ (key)
+        type: string
+        required: true
+        pattern: "^[a-z0-9_-]+$"
+        description: "ภาษาอังกฤษพิมพ์เล็ก ไม่มีเว้นวรรค ห้ามซ้ำ ใช้ในบทความ เช่น pam → [[pam|PAM]] อย่าเปลี่ยนของเดิม เพราะบทความที่ใช้อยู่จะหาคำไม่เจอ"
+      - name: term
+        label: ชื่อคำ (หัวกล่อง)
+        type: string
+        required: true
+        description: "ชื่อที่ขึ้นเป็นหัวกล่องอธิบาย เช่น PAM"
+      - name: term_en
+        label: ชื่อคำ (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ"
+      - name: definition
+        label: คำอธิบาย
+        type: text
+        required: true
+        description: "อธิบายสั้นๆ 1–3 ประโยค"
+      - name: definition_en
+        label: คำอธิบาย (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+
+  # ---------------------------------------------------------------- ข้อมูลเว็บ
+  - name: site
+    label: ข้อมูลเว็บและหน้าเกี่ยวกับฉัน
+    type: file
+    path: content/data/site.json
+    format: json
+    description: "ชื่อ ติดต่อ รูปโปรไฟล์ และข้อความแนะนำตัว ใช้ทุกหน้า แก้ที่เดียว"
+    fields:
+      - name: name
+        label: ชื่อ
+        type: string
+        required: true
+        description: "ชื่อ-นามสกุลที่แสดงทุกหน้าและในกล่องผู้เขียน"
+      - name: name_en
+        label: ชื่อ (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ เว้นว่างจะใช้ชื่อไทย"
+      - name: initials
+        label: อักษรย่อ
+        type: string
+        description: "ตัวอักษรในวงกลมข้างชื่อผู้เขียน เช่น กบ"
+      - name: initials_en
+        label: อักษรย่อ (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ"
+      - name: url
+        label: ที่อยู่เว็บ
+        type: string
+        description: "เช่น https://ชื่อผู้ใช้.github.io/ชื่อ-repo (ไม่มี / ท้าย) ใช้สร้างลิงก์แชร์และ sitemap เว้นว่างได้ ระบบจะหาจาก repo ให้เอง"
+      - name: email
+        label: อีเมล
+        type: string
+        description: "อีเมลติดต่อที่แสดงในหน้าเกี่ยวกับฉัน เว้นว่าง = ยังไม่แสดง"
+      - name: github
+        label: ลิงก์ GitHub
+        type: string
+        description: "https://github.com/ชื่อผู้ใช้ เว้นว่าง = ยังไม่แสดง"
+      - name: photo
+        label: รูปโปรไฟล์
+        type: object
+        description: "ใช้ในหน้าพอร์ตโฟลิโอและหน้าเกี่ยวกับฉัน ถ้ายังไม่มีรูป เว้นทั้งกลุ่มนี้ว่างไว้ (alt และ credit บังคับเมื่อใส่รูป)"
+        fields:
+          - name: file
+            label: รูป
+            type: image
+            description: "อัปโหลดหรือเลือกรูป (ควรเป็นรูปสี่เหลี่ยมจัตุรัสหรือแนวตั้ง กว้างอย่างน้อย 800 px)"
+            options:
+              media: profile
+          - name: alt
+            label: คำอธิบายรูป (alt)
+            type: string
+            required: true
+            description: "เช่น 'ภาพถ่ายกรวิชญ์ ยิ้มอยู่หน้าห้องแล็บ' (บังคับ)"
+          - name: credit
+            label: เครดิต
+            type: string
+            required: true
+            description: "ใครถ่ายภาพ (บังคับ)"
+      - name: intro
+        label: แนะนำตัวสั้น (หน้าพอร์ตโฟลิโอ)
+        type: text
+        description: "ข้อความใต้ชื่อในหน้าพอร์ตโฟลิโอ"
+      - name: intro_en
+        label: แนะนำตัวสั้น (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: bio
+        label: ประวัติผู้เขียน (ท้ายบทความ)
+        type: text
+        description: "ข้อความในกล่องผู้เขียนท้ายทุกบทความ"
+      - name: bio_en
+        label: ประวัติผู้เขียน (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: about_hello
+        label: คำทักทาย (หน้าเกี่ยวกับฉัน)
+        type: string
+        description: "ข้อความหน้าชื่อในหัวเรื่อง เช่น 'สวัสดีครับ ผมชื่อ'"
+      - name: about_hello_en
+        label: คำทักทาย (อังกฤษ)
+        type: string
+        description: "ไม่บังคับ"
+      - name: about_intro
+        label: แนะนำตัว (หน้าเกี่ยวกับฉัน)
+        type: text
+        description: "ย่อหน้าแรกใต้หัวเรื่อง"
+      - name: about_intro_en
+        label: แนะนำตัว (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: about_site
+        label: เกี่ยวกับเว็บนี้ (หน้าเกี่ยวกับฉัน)
+        type: text
+        description: "ย่อหน้าที่สองใต้หัวเรื่อง"
+      - name: about_site_en
+        label: เกี่ยวกับเว็บนี้ (อังกฤษ)
+        type: text
+        description: "ไม่บังคับ"
+      - name: interests
+        label: สิ่งที่สนใจ
+        type: string
+        list: true
+        description: "1 ช่อง = 1 คำ แสดงเป็นป้ายในหน้าเกี่ยวกับฉัน"
+      - name: tools
+        label: เครื่องมือที่ใช้
+        type: string
+        list: true
+        description: "1 ช่อง = 1 เครื่องมือ"
+      - name: path
+        label: เส้นทางที่วางไว้
+        type: object
+        list: true
+        description: "ลำดับจากตอนนี้ ไปอนาคต"
+        fields:
+          - name: state
+            label: สถานะของจุด
+            type: select
+            options:
+              values:
+                - name: now
+                  label: ตอนนี้ (จุดสีเน้น)
+                - name: next
+                  label: ต่อไป
+            description: "เลือก 'ตอนนี้' หรือ 'ต่อไป' ให้จุดนั้นเด่นขึ้น ปล่อยว่างสำหรับขั้นสุดท้าย"
+          - name: stage
+            label: ช่วง
+            type: string
+            description: "เช่น ตอนนี้ / ต่อไป / อนาคต"
+          - name: stage_en
+            label: ช่วง (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+          - name: title
+            label: หัวข้อ
+            type: string
+            required: true
+            description: "ชื่อขั้นของเส้นทาง เช่น เตรียมสอบ TCAS70"
+          - name: title_en
+            label: หัวข้อ (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+          - name: sub
+            label: รายละเอียด
+            type: string
+            description: "บรรทัดเล็กใต้หัวข้อ"
+          - name: sub_en
+            label: รายละเอียด (อังกฤษ)
+            type: string
+            description: "ไม่บังคับ"
+
+  # ---------------------------------------------------------------- แผนภาพกลไก CRISPR
+  - name: mechanism
+    label: แผนภาพกลไก CRISPR-Cas9 (ข้อความ)
+    type: file
+    path: content/data/mechanism.json
+    format: json
+    description: "ข้อความของแผนภาพที่ใส่ในบทความด้วย {{mech}} ป้ายและปุ่มในแผนภาพอยู่ในระบบ แก้เฉพาะข้อความอธิบายที่นี่"
+    fields:
+      - name: steps
+        label: 3 ขั้นตอน
+        type: object
+        list: true
+        description: "เรียงตามขั้น 1, 2, 3 (ต้องมี 3 ขั้น)"
+        fields:
+          - name: step
+            label: ชื่อขั้นตอน
+            type: text
+            description: "ข้อความในรายการขั้นตอนใต้แผนภาพ"
+          - name: step_en
+            label: ชื่อขั้นตอน (อังกฤษ)
+            type: text
+            description: "ไม่บังคับ"
+          - name: caption
+            label: คำบรรยายใต้แผนภาพ
+            type: text
+            description: "ขึ้นเมื่อเลือกขั้นนี้ ขั้นที่ 3 เว้นว่าง (ใช้คำบรรยายของวิธีซ่อมแซมแทน)"
+          - name: caption_en
+            label: คำบรรยายใต้แผนภาพ (อังกฤษ)
+            type: text
+            description: "ไม่บังคับ"
+      - name: repairs
+        label: วิธีซ่อมแซม
+        type: object
+        description: "ข้อความของการ์ด NHEJ และ HDR"
+        fields:
+          - name: nhej
+            label: NHEJ
+            component: repair
+            description: "ซ่อมแซมแบบต่อปลายตรงๆ"
+          - name: hdr
+            label: HDR
+            component: repair
+            description: "ซ่อมแซมโดยใช้แม่แบบ"

@@ -90,7 +90,7 @@ await processMedia();
 
 /** a file name written in the CMS (crispr.jpg, crispr.webp or crispr) -> the built "name.webp" if the picture exists */
 function mediaName(folder, name) {
-  const base = String(name || '').trim().replace(/\.[A-Za-z0-9]+$/, '');
+  const base = String(name || '').trim().split('/').pop().replace(/\.[A-Za-z0-9]+$/, '');   /* the CMS writes /media/<folder>/<file>: only the file name counts */
   return media.has(`${folder}/${base}.webp`) ? `${base}.webp` : null;
 }
 const isUrl = (s) => /^(https?:)?\/\//i.test(s);
@@ -106,10 +106,11 @@ function normaliseImages(file, data) {
   const [folder, fields] = spec;
   const items = Array.isArray(data) ? data : [data];
   items.forEach((it, i) => fields.forEach((k) => {
-    const v = it && typeof it[k] === 'string' ? it[k].trim() : '';
+    const holder = it && it[k] && typeof it[k] === 'object' ? it[k] : it, key = holder === it ? k : 'file';      /* a picture is a file name, or { file, alt, credit } */
+    const v = holder && typeof holder[key] === 'string' ? holder[key].trim() : '';
     if (!v || isUrl(v)) return;
     const fixed = mediaName(folder, v);
-    if (fixed) it[k] = fixed; else warn(`content/data/${file}${Array.isArray(data) ? ` #${i + 1}` : ''}: ${k} "${v}" is not in media/${folder}/ (the page shows the [ ] placeholder)`);
+    if (fixed) holder[key] = fixed; else warn(`content/data/${file}${Array.isArray(data) ? ` #${i + 1}` : ''}: ${k} "${v}" is not in media/${folder}/ (the page shows the [ ] placeholder)`);
   }));
 }
 const dataFiles = fs.existsSync(DATA_DIR) ? fs.readdirSync(DATA_DIR).filter((f) => f.endsWith('.json')) : [];
@@ -133,11 +134,13 @@ function figureHtml(a, ctx) {
     inner = `<div class="ph">${esc(alt)}</div>`;
   } else {
     if (!alt) (ctx.published ? err : warn)(`${where}: picture "${src}" has no alt text`);
+    if (!credit) (ctx.published ? err : warn)(`${where}: picture "${src}" has no credit (who made it / where it is from)`);
     if (isUrl(src)) {
       inner = `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
     } else {
-      const slash = src.includes('/');
-      const folder = slash ? src.split('/')[0] : 'articles', name = slash ? src.slice(folder.length + 1) : src;
+      const rel = src.replace(/^\/?media\//, '');                     /* the CMS writes /media/<folder>/<file> */
+      const slash = rel.includes('/');
+      const folder = slash ? rel.split('/')[0] : 'articles', name = slash ? rel.slice(folder.length + 1) : rel;
       const file = mediaName(folder, name);
       if (!file) { (ctx.published ? err : warn)(`${where}: picture "${src}" is not in media/${folder}/`); inner = `<div class="ph">${esc(alt)}</div>`; }
       else {
@@ -307,6 +310,7 @@ for (const f of (fs.existsSync(artDir) ? fs.readdirSync(artDir) : []).filter((x)
       else o.src = fixed;
     }
     if (o.type === 'image' && String(o.src || '').trim() && !String(o.alt || '').trim()) need(`${f}: covers[${i + 1}] picture has no alt text`);
+    if (o.type === 'image' && String(o.src || '').trim() && !String(o.credit || '').trim()) need(`${f}: covers[${i + 1}] picture has no credit`);
     return o;
   });
 

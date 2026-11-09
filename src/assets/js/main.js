@@ -422,7 +422,8 @@
         slot.__tpSlot = true;
         var kind = slot.getAttribute('data-slot');
         var file = (slot.getAttribute('data-file') || '').trim();
-        if (!file && kind === 'profile' && siteCache && siteCache.photo) file = String(siteCache.photo).trim();
+        var photo = siteCache && siteCache.photo;                          /* "photo" is { file, alt, credit } (a plain file name also works) */
+        if (!file && kind === 'profile' && photo) file = String(typeof photo === 'object' ? photo.file || '' : photo).trim();
         file = safeUrl(file);
         if (!file) return;                       /* no file yet: keep the [ ] placeholder */
         var src = isExternal(file) ? file : base + 'assets/img/' + kind + '/' + file.replace(/^\/+/, '');
@@ -431,6 +432,7 @@
           var card = slot.closest('.exp-card'), h = card && card.querySelector('h3');
           if (h) alt = h.textContent;
           else if (kind === 'certificates') alt = t('alt.certificate');
+          else if (kind === 'profile' && photo && photo.alt) alt = photo.alt;
           else if (kind === 'profile') alt = t('alt.profile') + (siteCache && siteCache.name ? ' ' + ((current === 'en' && siteCache.name_en) || siteCache.name) : '');
           else alt = '';
         }

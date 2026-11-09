@@ -5,7 +5,7 @@
   "description": "The Picture: build script (runs on GitHub Actions; authors never run it)",
   "type": "module",
   "engines": { "node": ">=20" },
-  "scripts": { "build": "node scripts/build.mjs" },
+  "scripts": { "build": "node scripts/build.mjs", "check:cms": "node scripts/check-pages-config.mjs" },
   "dependencies": {
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.0",
