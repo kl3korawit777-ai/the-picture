@@ -12,6 +12,17 @@ covers:
     alt: "-"
     caption: CRISPR-Cas9 Gene Editing Modifying DNA Strand
     credit: stock.adobe.com
+  - type: image
+    src: /media/covers/mw8zx9e5-kikz3aku.jpg
+    alt: "-"
+    caption: CRISPR-CAS9 gene editing complex from Streptococcus pyogenes.
+    credit: stock.adobe.com
+  - type: image
+    src: /media/covers/mw8zzol9-s76jpwxo.jpg
+    alt: "-"
+    caption: 3D rendering of E3 ubiquitin-protein ligase HECTD1 as predicted by
+      alphafold and colored according to confidence in the model.
+    credit: stock.adobe.com
 references:
   - "[แหล่งอ้างอิง 1]"
   - "[แหล่งอ้างอิง 2]"
