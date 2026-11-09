@@ -331,7 +331,7 @@ html.has-lightbox { overflow: hidden; }
 .photo-cap .credit { display: block; margin-top: 2px; }
 .photo.round { max-width: 400px; }
 .photo.round .ph { aspect-ratio: 1 / 1; border-radius: 999px; }
-.photo.round .ph.has-img img { object-position: 50% 0; }       /* portrait photo in a circle: keep the head (hair) inside the frame */
+.photo.round .ph.has-img img { object-position: 50% 30%; }       /* portrait photo in a circle: keep the head (hair) inside the frame */
 
 .version-row { margin-top: 48px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .version-row .label { font-size: 14px; color: var(--muted); margin-right: 8px; }
