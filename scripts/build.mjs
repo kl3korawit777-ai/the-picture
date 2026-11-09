@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import MarkdownIt from 'markdown-it';
 import sharp from 'sharp';
+import directives, { esc, parseAttrs } from './markdown-directives.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const P = (...a) => path.join(ROOT, ...a);
@@ -29,7 +30,6 @@ const IMG_EXT = /\.(jpe?g|png|webp|avif|tiff?)$/i;
 const errors = [], warnings = [];
 const err = (m) => errors.push(m), warn = (m) => warnings.push(m);
 
-const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const read = (f) => fs.readFileSync(f, 'utf8').replace(/\r\n/g, '\n');
 const write = (f, s) => { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, s); };
 const readJson = (f) => { try { return JSON.parse(read(f)); } catch (e) { err(`${path.relative(ROOT, f)}: not valid JSON (${e.message})`); return null; } };
@@ -123,8 +123,6 @@ const glossary = readJson(P('content/data/glossary.json')) || [];
 const glossaryKeys = new Set(glossary.map((g) => g.key));
 
 /* ------------------------------------------------------------------ 2. markdown -> HTML */
-function parseAttrs(s) { const o = {}; for (const m of s.matchAll(/(\w+)\s*=\s*"([^"]*)"/g)) o[m[1]] = m[2]; return o; }
-
 /** one picture block. ctx = { slug, published, prefix }.  Empty src = the [ ] placeholder slot. */
 function figureHtml(a, ctx) {
   const alt = (a.alt || '').trim(), cap = (a.caption || '').trim(), credit = (a.credit || '').trim(), src = (a.src || '').trim();
@@ -154,129 +152,14 @@ function figureHtml(a, ctx) {
   return `<figure class="figure">\n${inner}\n${capHtml}\n</figure>\n`;
 }
 
-function makeMarkdown() {
-  const md = new MarkdownIt({ html: false, linkify: false, typographer: false });
-
-  /* [[key|text]]  glossary word */
-  md.inline.ruler.before('link', 'tp_term', (state, silent) => {
-    const s = state.src, p = state.pos;
-    if (s.charCodeAt(p) !== 0x5b || s.charCodeAt(p + 1) !== 0x5b) return false;
-    const end = s.indexOf(']]', p + 2); if (end < 0) return false;
-    const m = s.slice(p + 2, end).match(/^([a-z0-9_-]+)\\?\|(.+)$/i); if (!m) return false;   /* inside a table cell the bar is written \| */
-    if (!silent) {
-      const env = state.env;
-      if (!glossaryKeys.has(m[1])) (env.published ? err : warn)(`${env.slug}.md: [[${m[1]}|…]] is not a key in content/data/glossary.json`);
-      const t = state.push('html_inline', '', 0);
-      t.content = `<button type="button" class="term" data-term="${esc(m[1])}">${esc(m[2])}</button>`;
-    }
-    state.pos = end + 2; return true;
-  });
-
-  /* {{mech}}  {{figure …}}  {{duo}} … {{/duo}} */
-  md.block.ruler.before('fence', 'tp_directive', (state, startLine, endLine, silent) => {
-    const pos = state.bMarks[startLine] + state.tShift[startLine], max = state.eMarks[startLine];
-    const line = state.src.slice(pos, max).trim();
-    if (!line.startsWith('{{')) return false;
-    const m = line.match(/^\{\{\s*(\/?\w+)([^}]*)\}\}$/);
-    if (!m) return false;
-    const [, name, rest] = m, env = state.env;
-    if (name === 'mech') {
-      if (silent) return true;
-      state.push('html_block', '', 0).content = '<div data-mech></div>\n';
-      state.line = startLine + 1; return true;
-    }
-    if (name === 'figure') {
-      if (silent) return true;
-      state.push('html_block', '', 0).content = figureHtml(parseAttrs(rest), env);
-      state.line = startLine + 1; return true;
-    }
-    if (name === 'duo') {
-      let close = -1;
-      for (let l = startLine + 1; l < endLine; l++) {
-        if (state.src.slice(state.bMarks[l] + state.tShift[l], state.eMarks[l]).trim() === '{{/duo}}') { close = l; break; }
-      }
-      if (close < 0) { err(`${env.slug}.md: {{duo}} has no {{/duo}}`); return false; }
-      if (silent) return true;
-      const inner = state.getLines(startLine + 1, close, state.blkIndent, false);
-      const sides = inner.split(/\n\s*---\s*\n/);
-      if (sides.length !== 2) (env.published ? err : warn)(`${env.slug}.md: {{duo}} needs exactly two sides separated by a line with ---`);
-      const html = sides.map((side, i) => {
-        const lines = side.trim().split('\n');
-        const lm = lines[0].match(/^\*\*(.+)\*\*$/);
-        if (!lm) (env.published ? err : warn)(`${env.slug}.md: each {{duo}} side starts with a **label** line`);
-        const label = lm ? md.renderInline(lm[1], env) : '';
-        const body = md.render((lm ? lines.slice(1) : lines).join('\n'), env);
-        return `<div><span class="label${i === 0 ? ' accent' : ''}">${label}</span>${body.trim()}</div>`;
-      }).join('\n');
-      state.push('html_block', '', 0).content = `<div class="duo">\n${html}\n</div>\n`;
-      state.line = close + 1; return true;
-    }
-    err(`${env.slug}.md: unknown directive {{${name}}} (use mech, figure, duo)`);
-    return false;
-  });
-
-  /* heading {#id}, quote paragraphs, picture-only paragraphs */
-  md.core.ruler.push('tp_post', (state) => {
-    const t = state.tokens, env = state.env;
-    let inQuote = 0;
-    for (let i = 0; i < t.length; i++) {
-      const tok = t[i];
-      if (tok.type === 'blockquote_open') inQuote++;
-      else if (tok.type === 'blockquote_close') inQuote--;
-      else if (inQuote && (tok.type === 'paragraph_open' || tok.type === 'paragraph_close')) tok.hidden = true;
-      if (tok.type === 'heading_open') {
-        if (tok.tag === 'h1') warn(`${env.slug}.md: "# " heading in the text: use ## and ### (the page title is the front matter title)`);
-        const inl = t[i + 1];
-        const m = inl.content.match(/\s*\{#([A-Za-z0-9_-]+)\}\s*$/);
-        if (m) {
-          tok.attrSet('id', m[1]);
-          inl.content = inl.content.replace(m[0], '');
-          const last = inl.children[inl.children.length - 1];
-          if (last && last.type === 'text') last.content = last.content.replace(/\s*\{#[A-Za-z0-9_-]+\}\s*$/, '');
-          (env.ids ||= new Set());
-          if (env.ids.has(m[1])) err(`${env.slug}.md: heading id "${m[1]}" is used twice`);
-          env.ids.add(m[1]);
-        }
-      }
-      /* a paragraph that holds only an image becomes a figure */
-      if (tok.type === 'paragraph_open' && t[i + 1] && t[i + 1].type === 'inline') {
-        const ch = t[i + 1].children;
-        if (ch.length === 1 && ch[0].type === 'image') {
-          const im = ch[0];
-          const html = new state.Token('html_block', '', 0);
-          html.content = figureHtml({ src: im.attrGet('src'), alt: im.content, caption: im.attrGet('title') || '' }, env);
-          t.splice(i, 3, html);
-        }
-      }
-    }
-  });
-
-  const r = md.renderer.rules;
-  r.blockquote_open = () => '<blockquote class="pull">';
-  r.table_open = () => '<div class="table-wrap">\n<table>\n';
-  r.table_close = () => '</table>\n</div>\n';
-  r.th_open = () => '<th scope="col">';
-  const para = r.paragraph_open || ((tokens, idx, o, e, self) => self.renderToken(tokens, idx, o));
-  r.paragraph_open = (tokens, idx, o, env, self) => {
-    const inl = tokens[idx + 1];
-    if (!tokens[idx].hidden && inl && /^\[[^\[\]]*\]$/.test(inl.content.trim())) return '<p class="todo">';   /* a paragraph that is only [ ... ] is a slot waiting for real text */
-    return para(tokens, idx, o, env, self);
-  };
-  const link = r.link_open || ((tokens, idx, o, e, self) => self.renderToken(tokens, idx, o));
-  r.link_open = (tokens, idx, o, env, self) => {
-    const href = tokens[idx].attrGet('href') || '';
-    if (/^https?:\/\//i.test(href)) { tokens[idx].attrSet('target', '_blank'); tokens[idx].attrSet('rel', 'noopener'); }
-    return link(tokens, idx, o, env, self);
-  };
-  /* inline pictures inside a longer paragraph are not allowed to skip alt text either */
-  const image = r.image;
-  r.image = (tokens, idx, o, env, self) => {
-    if (!tokens[idx].content) (env.published ? err : warn)(`${env.slug}.md: a picture has no alt text`);
-    return image(tokens, idx, o, env, self);
-  };
-  return md;
-}
-const md = makeMarkdown();
+const report = (env, msg) => (env.published ? err : warn)(`${env.slug}.md: ${msg}`);
+const md = new MarkdownIt({ html: false, linkify: false, typographer: false }).use(directives, {
+  glossaryKeys,
+  figure: figureHtml,
+  fatal: (env, msg) => err(`${env.slug}.md: ${msg}`),
+  error: report,
+  warn: (env, msg) => warn(`${env.slug}.md: ${msg}`),
+});
 
 /* ------------------------------------------------------------------ read articles */
 const normDate = (d) => d instanceof Date ? d.toISOString().slice(0, 10) : String(d ?? '').trim();
@@ -285,13 +168,14 @@ const articles = [];
 const artDir = P('content/articles');
 for (const f of (fs.existsSync(artDir) ? fs.readdirSync(artDir) : []).filter((x) => x.endsWith('.md')).sort()) {
   const slug = f.replace(/\.md$/, '');
-  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) { err(`content/articles/${f}: the file name (the address of the article) uses only a-z, 0-9 and "-"`); continue; }
+  if (!/^_?[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) { err(`content/articles/${f}: the file name (the address of the article) uses only a-z, 0-9 and "-" (a leading _ marks a draft guide)`); continue; }
   let fm;
   try { fm = matter(read(path.join(artDir, f))); } catch (e) { err(`content/articles/${f}: front matter is not valid (${e.message})`); continue; }
   const d = fm.data;
   const status = String(d.status || 'draft').trim();
   if (!['draft', 'published'].includes(status)) err(`${f}: status must be draft or published (got "${status}")`);
   const published = status === 'published';
+  if (slug.startsWith('_') && published) err(`${f}: a file name that starts with _ is a guide/example and must stay status: draft`);
   const need = published ? err : warn;
   const title = String(d.title ?? '').trim(), date = normDate(d.date), category = String(d.category ?? '').trim();
   if (!title) need(`${f}: no title`);
