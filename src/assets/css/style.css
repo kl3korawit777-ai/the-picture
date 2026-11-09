@@ -411,7 +411,6 @@ html.has-lightbox { overflow: hidden; }
 .ph.has-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .ph.has-img .zoom-btn { border-radius: inherit; }
 .cert-grid .ph.has-img img { object-fit: contain; }
-.pill-link { margin-left: auto; color: var(--ink-2); }
 .print-only { display: none; }
 
 /* ---------- printing / "Save as PDF": portfolio and about read as plain documents ---------- */

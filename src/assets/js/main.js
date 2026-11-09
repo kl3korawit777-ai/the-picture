@@ -300,10 +300,6 @@
     document.querySelectorAll('[data-copy-link]').forEach(function (b) {
       b.addEventListener('click', function () { copyText(location.href.split('#')[0], t('linkCopied')); });
     });
-    /* copies the address as it is now, including a #chem / #bio filter */
-    document.querySelectorAll('[data-copy-hash]').forEach(function (b) {
-      b.addEventListener('click', function () { copyText(location.href, t('linkCopied')); });
-    });
     document.querySelectorAll('[data-share]').forEach(function (b) {
       b.addEventListener('click', function () {
         var data = { title: document.title, url: location.href.split('#')[0] };
