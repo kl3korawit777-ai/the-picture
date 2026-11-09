@@ -43,9 +43,10 @@
       "sub": "Bioinformatics หรือ Medical Biotechnology"
     },
     {
+      "state": "next",
       "stage": "อนาคต",
-      "title": "แพทย์ และสตาร์ตอัปด้าน Biotech",
-      "sub": "ก่อตั้งหรือร่วมก่อตั้งสตาร์ตอัปด้าน Biotech หรือ Bioinformatics"
+      "title": "สิ่งที่อยากทำในอนาคต",
+      "sub": "ก่อตั้งสตาร์ตอัปด้าน Biotech "
     }
   ]
 }
