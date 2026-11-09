@@ -336,11 +336,6 @@ html.has-lightbox { overflow: hidden; }
 .stats-row .stat { background: var(--tint); border-radius: 20px; padding: 28px; }
 .stats-row .stat .big { font-size: 36px; color: var(--accent); }
 .stats-row .stat .what { font-size: 15px; color: var(--ink-2); }
-.hero-split .stats-row { margin-top: 0; flex: 1 1 300px; max-width: 380px; grid-template-columns: 1fr; gap: 12px; }
-.hero-split .stats-row .stat { padding: 20px 24px; }
-.hero-split .stats-row .stat .big { font-size: 32px; }
-.hero-split .stats-row:empty { min-height: 376px; }
-@media (max-width: 760px) { .hero-split .stats-row { flex-basis: 100%; max-width: none; } }
 
 .split { display: flex; flex-wrap: wrap; gap: 48px; }
 .split > .side { flex: 1 1 280px; min-width: 0; }
