@@ -1,31 +1,28 @@
 ---
-title: "CRISPR และ AlphaFold เทคโนโลยีที่สามารถปฏิวัติวงการ Bio-Tech และการแพทย์"
-dek: "หลักการทำงาน การนำไปใช้ และข้อจำกัดของเครื่องมือตัดแต่งยีนกับ AI ทำนายโครงสร้างโปรตีน สองผลงานที่ได้รับรางวัลโนเบลสาขาเคมี"
-category: biotech
-date: "2026-11"
+title: CRISPR และ AlphaFold เทคโนโลยีที่สามารถปฏิวัติวงการ Bio-Tech และการแพทย์
+dek: หลักการทำงาน การนำไปใช้ และข้อจำกัดของเครื่องมือตัดแต่งยีนกับ AI
+  ทำนายโครงสร้างโปรตีน สองผลงานที่ได้รับรางวัลโนเบลสาขาเคมี
+category: bioinformatics
+date: 2026-11-09
 status: published
 featured: true
-title_en: ""
-dek_en: ""
 covers:
   - type: helix
-    caption: "CRISPR-Cas9 แก้ไข DNA ได้ตรงตำแหน่งที่ต้องการ"
-    credit: ""
+    caption: CRISPR-Cas9 แก้ไข DNA ได้ตรงตำแหน่งที่ต้องการ
   - type: fold
-    caption: "ภาพประกอบโครงสร้างโปรตีน ระบายสีตามค่าความมั่นใจ (pLDDT) แบบเดียวกับที่ AlphaFold ใช้"
-    credit: ""
+    caption: ภาพประกอบโครงสร้างโปรตีน ระบายสีตามค่าความมั่นใจ (pLDDT) แบบเดียวกับที่
+      AlphaFold ใช้
   - type: image
-    src: ""
-    alt: ""
+    alt: "-"
     caption: "[คำบรรยายภาพปกของคุณ]"
     credit: "[เครดิตภาพ]"
 references:
   - "[แหล่งอ้างอิง 1]"
   - "[แหล่งอ้างอิง 2]"
-# optional extras (text that was already on the page / in <head>):
-short_title: "CRISPR และ AlphaFold"
-lead: "รายงานนี้อธิบายหลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold โดยอ้างอิงจากงานวิจัยและแหล่งข้อมูลที่เชื่อถือได้"
-description: "หลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold"
+short_title: CRISPR และ AlphaFold
+lead: รายงานนี้อธิบายหลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold
+  โดยอ้างอิงจากงานวิจัยและแหล่งข้อมูลที่เชื่อถือได้
+description: หลักการทำงาน การนำไปใช้ และข้อจำกัดของ CRISPR และ AlphaFold
 ---
 ## บทนำ {#intro}
 
