@@ -3,33 +3,9 @@
     "cat": "bio",
     "kicker": "Lab",
     "title": "สกัด DNA และ Gel Electrophoresis",
-    "title_en": "",
     "text": "ลงมือปฏิบัติจริงในห้องแล็บ ทำงานร่วมกับเพื่อนอย่างอิสระ",
-    "text_en": "",
-    "image": "",
-    "alt": "",
-    "credit": ""
-  },
-  {
-    "cat": "physics",
-    "kicker": "Experiment",
-    "title": "การทดลองการเคลื่อนที่แบบโพรเจกไทล์",
-    "title_en": "",
-    "text": "ยิงลูกปิงปองที่มุมต่าง ๆ เพื่อศึกษาการเคลื่อนที่",
-    "text_en": "",
-    "image": "",
-    "alt": "",
-    "credit": ""
-  },
-  {
-    "cat": "stem",
-    "kicker": "STEM",
-    "title": "My Math My STEM 1 และ 2",
-    "title_en": "",
-    "text": "ออกแบบสะพานหลอดพลาสติกรับลูกปิงปอง และอุปกรณ์กันไข่แตกเมื่อปล่อยจากความสูง 3 เมตร",
-    "text_en": "",
-    "image": "",
-    "alt": "",
-    "credit": ""
+    "image": "/media/activities/mw9alwt9-21da70xc.jpg",
+    "alt": "-",
+    "credit": "-"
   }
 ]
