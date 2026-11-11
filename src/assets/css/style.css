@@ -311,6 +311,7 @@ html.has-lightbox { overflow: hidden; }
 .refs { margin-top: 56px !important; padding-top: 24px; border-top: 1px solid var(--line); }
 .refs h2 { font-size: 18px; margin: 0; }
 .refs ol { margin: 12px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.8; color: var(--muted); }
+.refs li { overflow-wrap: anywhere; }       /* long URLs / DOIs must not widen the page on phones */
 .author-card { margin-top: 40px !important; border-radius: 20px; background: var(--tint); padding: 24px; display: flex; gap: 16px; align-items: center; line-height: 1.5; }
 .author-card .avatar { width: 56px; height: 56px; font-size: 18px; }
 .author-card .name { font-weight: 600; font-size: 16px; }
