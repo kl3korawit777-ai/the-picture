@@ -6,7 +6,22 @@ category: biotech
 date: 2026-11-16
 status: published
 featured: false
-covers: []
+covers:
+  - type: image
+    src: /media/covers/atmp-dna-capsule.jpg
+    alt: ภาพ 3 มิติของสาย DNA ภายในแคปซูลใสที่เปิดออก ล้อมรอบด้วยเซลล์สีชมพูบนพื้นหลังสีฟ้า
+    caption: ภาพจำลอง DNA ในแคปซูล แทนแนวคิดยาที่เป็นสารพันธุกรรม
+    credit: BioVox (biovox.eu), Belgium leads the way in advancing ATMPs
+  - type: image
+    src: /media/covers/atmp-car-t-cell.png
+    alt: ภาพ 3 มิติของเซลล์ T สีแดงที่จับกับเซลล์มะเร็งสีน้ำเงิน
+    caption: ภาพจำลองเซลล์ CAR-T (สีแดง) จับกับเซลล์มะเร็ง (สีน้ำเงิน)
+    credit: Multiple Myeloma Hub (multiplemyelomahub.com)
+  - type: image
+    src: /media/covers/atmp-organoids.jpg
+    alt: ภาพ 3 มิติของออร์แกนอยด์ก้อนกลมสีชมพูหลายก้อนในจานเพาะเลี้ยงเซลล์
+    caption: ภาพจำลองออร์แกนอยด์ในจานเพาะเลี้ยงเซลล์
+    credit: Danaher Life Sciences (lifesciences.danaher.com)
 references:
   - "กองยุทธศาสตร์และแผนงาน กระทรวงสาธารณสุข. Thailand ATMP Roadmap 2568–2572. https://spd.moph.go.th/wp-content/uploads/2025/12/0-4553624901804491175.pdf_20251203_094955_0000.pdf"
   - "Hfocus. ประกาศกระทรวงสาธารณสุข เรื่องระบุวัตถุที่เป็นยา. พฤษภาคม 2569. https://www.hfocus.org/content/2026/05/38259"
