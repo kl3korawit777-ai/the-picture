@@ -97,6 +97,13 @@ p { margin: 0; }
 .logo-word { font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: 0.06em; line-height: 1; color: var(--ink); }
 .main-nav { display: flex; gap: 28px; font-size: 15px; font-weight: 500; }
 .main-nav a[aria-current="page"] { color: var(--accent); font-weight: 600; }
+@media (min-width: 861px) {                           /* wide screens: the menu is one rounded group, the current page is the accent button */
+  .main-nav { gap: 2px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+  .main-nav a { padding: 10px 20px; border-radius: 999px; line-height: 1.5; }
+  .main-nav a:hover { background: var(--bg); color: var(--ink); }
+  .main-nav a[aria-current="page"], .main-nav a[aria-current="page"]:hover { background: var(--accent); color: var(--accent-ink); }
+}
+@media (min-width: 861px) and (prefers-reduced-motion: no-preference) { .main-nav a { transition: background .2s, color .2s; } }
 .header-tools { display: flex; align-items: center; gap: 10px; }
 .lang-switch { display: flex; padding: 3px; border-radius: 999px; background: #F3F4F6; }
 .lang-switch button { border: 0; border-radius: 999px; padding: 6px 14px; min-height: 36px; background: transparent; font-size: 13px; font-weight: 500; color: var(--muted); }
@@ -123,6 +130,8 @@ p { margin: 0; }
 /* ---------- chips & labels ---------- */
 .chip-row { border-bottom: 1px solid var(--line); }
 .chip-row .container { padding-block: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-row-inline { border-bottom: 0; margin-bottom: 8px; }                    /* the home page: the chips sit above the list of latest articles, inside the page column */
+.chip-row-inline > .container { padding-left: 0; padding-right: 0; }
 .chip { border: 0; padding: 7px 15px; border-radius: 999px; background: #F3F4F6; font-size: 14px; font-weight: 500; color: var(--ink); min-height: 36px; }
 .chip:hover { background: #E9EAED; color: var(--ink); }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }

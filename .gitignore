@@ -12,6 +12,7 @@ desktop.ini
 *.log
 *.zip
 .env
+.hub.env
 node_modules/
 
 # Claude Code local settings

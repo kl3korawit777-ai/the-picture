@@ -35,6 +35,11 @@
 .pick-cat { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .pick-title { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.45; text-wrap: pretty; }
 
+/* the empty card that holds the place until picks.js has drawn the real ones (no layout shift) */
+.pick-skel .pick-body { min-height: 150px; }
+@media (max-width: 720px) { .pick-skel .pick-body { min-height: 124px; } }
+.pick-skel { background: var(--bg); }
+
 /* round arrow buttons at the middle of the pictures (desktop) */
 .picks-next, .picks-prev {
   position: absolute; z-index: 2; top: var(--btn-top, 40%);

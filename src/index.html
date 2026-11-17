@@ -28,8 +28,6 @@
 <body>
 <a class="skip-link" href="#main" data-i18n="skip">ข้ามไปที่เนื้อหา</a>
 
-<div class="topbar"><div class="container"><span data-today>วันนี้</span></div></div>
-
 <header class="site-header">
 <div class="container">
 <a class="logo" href="index.html" aria-label="The Picture หน้าแรก" data-i18n-aria="aria.home"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">THE PICTURE</span></a>
@@ -48,30 +46,20 @@
 </header>
 <div class="en-notice" hidden><div class="container" data-i18n="notice">English is coming soon.</div></div>
 
-<div class="chip-row">
-<div class="container" data-filter-group="latest-list" role="group" aria-label="กรองตามหมวด" data-i18n-aria="aria.filterCategory">
-<button type="button" class="chip" data-filter="all" aria-pressed="true" data-i18n="cat.all">ทั้งหมด</button>
-<button type="button" class="chip" data-filter="medicine" aria-pressed="false">Medicine</button>
-<button type="button" class="chip" data-filter="biotech" aria-pressed="false">Biotech</button>
-<button type="button" class="chip" data-filter="bioinformatics" aria-pressed="false">Bioinformatics</button>
-<button type="button" class="chip" data-filter="ai" aria-pressed="false">AI &amp; Tech</button>
-<button type="button" class="chip" data-filter="notes" aria-pressed="false">Study Notes</button>
-</div>
-</div>
 
 <!-- ปกเต็มจอ: hero.js เติมให้ ขนาดถูกจองไว้ก่อน (ถ้าไม่มีบทความที่มีรูปปก main.js จะซ่อนส่วนนี้) -->
 <section class="hero" id="hero" aria-hidden="true"><div class="hero-track"></div></section>
-<noscript><style>.hero { display: none; }</style></noscript>
+<noscript><style>.hero, .picks { display: none; }</style></noscript>
 
-<!-- แถบ "แนะนำให้อ่าน": picks.js สร้างการ์ดให้ (ตามช่อง pick ใน front matter ถ้าไม่มีใช้เรื่องใหม่สุด) ซ่อนไว้จนกว่าจะมีตั้งแต่ 2 เรื่อง -->
-<section class="picks" id="picks" aria-labelledby="picks-h" hidden>
+<!-- แถบ "แนะนำให้อ่าน": picks.js สร้างการ์ดให้ (ตามช่อง pick ใน front matter ถ้าไม่มีใช้เรื่องใหม่สุด) ต้องมีตั้งแต่ 2 เรื่อง ไม่งั้น main.js ซ่อนทั้งแถบ ระหว่างรอข้อมูลมีการ์ดเปล่า (.pick-skel) จองที่ไว้ไม่ให้หน้ากระตุก -->
+<section class="picks" id="picks" aria-labelledby="picks-h">
 <div class="picks-inner">
 <div class="picks-head">
 <div><span class="picks-eyebrow" data-i18n="picks.eyebrow">EDITOR'S PICKS</span><h2 id="picks-h" data-i18n="picks.title">แนะนำให้อ่าน</h2></div>
 <span class="picks-swipe" aria-hidden="true"><span data-i18n="picks.swipe">Swipe</span> <svg width="34" height="14" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h31M26 1l6 6-6 6"/></svg></span>
 </div>
 <div class="picks-viewport">
-<ol class="picks-track"></ol>
+<ol class="picks-track"><li class="pick pick-skel" aria-hidden="true"><div class="pick-media"></div><div class="pick-body"></div></li></ol>
 <button type="button" class="picks-prev" hidden aria-label="เลื่อนไปการ์ดก่อนหน้า" data-i18n-aria="picks.prev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
 <button type="button" class="picks-next" hidden aria-label="เลื่อนไปการ์ดถัดไป" data-i18n-aria="picks.next"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
 </div>
@@ -97,9 +85,21 @@
 </template>
 
 <section class="lead">
-<article class="lead-main" id="lead-main"></article>
+<!-- บทความเด่นแบบเดิม: ใช้สำรองเมื่อไม่มีบทความที่มีปกเป็นรูปจริง (main.js เปิดให้เอง) ปกปกติอยู่ที่ #hero -->
+<article class="lead-main" id="lead-main" hidden></article>
 
 <aside class="lead-side" aria-labelledby="latest-h">
+<div class="chip-row chip-row-inline">
+<div class="container" data-filter-group="latest-list" role="group" aria-label="กรองตามหมวด" data-i18n-aria="aria.filterCategory">
+<button type="button" class="chip" data-filter="all" aria-pressed="true" data-i18n="cat.all">ทั้งหมด</button>
+<button type="button" class="chip" data-filter="medicine" aria-pressed="false">Medicine</button>
+<button type="button" class="chip" data-filter="biotech" aria-pressed="false">Biotech</button>
+<button type="button" class="chip" data-filter="bioinformatics" aria-pressed="false">Bioinformatics</button>
+<button type="button" class="chip" data-filter="ai" aria-pressed="false">AI &amp; Tech</button>
+<button type="button" class="chip" data-filter="notes" aria-pressed="false">Study Notes</button>
+</div>
+</div>
+
 <div class="list-head"><h2 id="latest-h" data-i18n="home.latest">ล่าสุด</h2><a href="#latest-list" style="font-size:14px;color:var(--muted)" data-i18n="home.seeAll">ดูทั้งหมด</a></div>
 <div id="latest-list">
 <ol class="latest" id="latest-ol"></ol>

@@ -654,9 +654,10 @@
       }
 
       if (lead && heroOn) {
-        lead.textContent = '';                       /* the featured article is in the hero: one h1 on the page */
+        lead.hidden = true;                          /* the featured article is in the hero: one h1 on the page */
         if (lead.parentNode) lead.parentNode.classList.add('has-hero');
       } else if (lead) {
+        lead.hidden = false;                         /* no real cover picture: the old featured article is the fallback */
         lead.textContent = '';
         var feat = posts.filter(function (p) { return p.featured === true; })[0] || posts[0];
         if (!feat) {
