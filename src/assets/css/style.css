@@ -28,6 +28,17 @@
   --glass: rgba(255, 255, 255, 0.92);                 /* slider buttons and legend over a picture */
   --dot: rgba(17, 19, 24, 0.28);                      /* slider dots (not the current one) */
   --helix-rung: #A9BBE6;                              /* DNA helix rungs */
+  /* home hero (hero.css) and the picks strip */
+  --hero-bg: #0B0C0F;                                 /* behind the photo while it loads */
+  --hero-ink: #FFFFFF;                                /* text over the photo */
+  --hero-ink-2: rgba(255, 255, 255, 0.78);            /* secondary text over the photo (date, reading time, credit): 4.5:1 or better on the scrim */
+  --hero-shade: rgba(0, 0, 0, 0.88);                  /* the dark side of the scrim over the photo */
+  --hero-shade-0: rgba(0, 0, 0, 0);
+  --hero-dot: rgba(255, 255, 255, 0.45);              /* dots and the line of a tab that is not current */
+  --hero-glass: rgba(0, 0, 0, 0.25);                  /* round arrow button over a picture */
+  --hero-glass-2: rgba(0, 0, 0, 0.5);
+  --paper: #EEECE8;                                   /* warm grey band behind the picks */
+  --rank-bg: #000000;                                 /* the black number tab on a pick card */
   /* AlphaFold confidence colours (pLDDT) used by the protein-fold cover */
   --plddt-very-high: #0053D6;                         /* > 90 */
   --plddt-confident: #65CBF3;                         /* 70 - 90 */

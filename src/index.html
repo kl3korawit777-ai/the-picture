@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/interactive.css">
 <link rel="stylesheet" href="assets/css/covers.css">
+<link rel="stylesheet" href="assets/css/hero.css">
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="skip">ข้ามไปที่เนื้อหา</a>
@@ -56,6 +57,10 @@
 <button type="button" class="chip" data-filter="notes" aria-pressed="false">Study Notes</button>
 </div>
 </div>
+
+<!-- ปกเต็มจอ: hero.js เติมให้ ขนาดถูกจองไว้ก่อน (ถ้าไม่มีบทความที่มีรูปปก main.js จะซ่อนส่วนนี้) -->
+<section class="hero" id="hero" aria-hidden="true"><div class="hero-track"></div></section>
+<noscript><style>.hero { display: none; }</style></noscript>
 
 <main id="main" class="container" style="padding-top: 40px">
 
@@ -135,6 +140,7 @@
 <button type="button" class="to-top" hidden aria-label="กลับขึ้นด้านบน" data-i18n-aria="aria.toTop"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="21"/><circle class="ring" cx="24" cy="24" r="21"/><path class="arrow" d="M24 31V17M18 23l6-6 6 6"/></svg></button>
 
 <script src="assets/js/covers.js"></script>
+<script src="assets/js/hero.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/interactive.js"></script>
 </body>

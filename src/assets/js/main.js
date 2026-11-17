@@ -634,7 +634,19 @@
       var ol = document.getElementById('latest-ol');
       var empty = document.querySelector('#latest-list .empty');
 
-      if (lead) {
+      /* full-width hero (hero.js) from the articles loaded above: featured first, then the newest, only with a real cover picture.
+         Without one (or without hero.js) the hero is hidden and the featured article is shown the old way. */
+      var heroEl = document.getElementById('hero');
+      var heroOn = !!(heroEl && TP.hero && TP.hero.mount(heroEl, posts, {
+        base: base, link: function (p) { return articleLink(p); },
+        cat: function (el, c) { return labelBi(el, 'cat', c); }, date: dateBi
+      }));
+      if (heroEl && !heroOn) heroEl.hidden = true;
+
+      if (lead && heroOn) {
+        lead.textContent = '';                       /* the featured article is in the hero: one h1 on the page */
+        if (lead.parentNode) lead.parentNode.classList.add('has-hero');
+      } else if (lead) {
         lead.textContent = '';
         var feat = posts.filter(function (p) { return p.featured === true; })[0] || posts[0];
         if (!feat) {
