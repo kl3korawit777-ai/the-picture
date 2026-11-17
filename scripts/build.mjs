@@ -8,6 +8,7 @@
      3. data/articles.json (published only, newest first) + content/data/*.json
      4. media/<folder>/*  -> assets/img/<folder>/<name>.webp (max 1600 px wide) and <name>-800.webp
      5. sitemap.xml, robots.txt
+     3b. every article gets read_min (minutes, as on the article page); optional front matter: pick (1-10, unique among published) and covers[].focus
      6. a published article missing title, date or category, or with a picture without alt text, FAILS the build
 
    Site address (for og:url, og:image, sitemap): env SITE_URL, else "url" in content/data/site.json,
@@ -26,6 +27,8 @@ const P = (...a) => path.join(ROOT, ...a);
 const OUT = P('_site');
 const CATEGORIES = ['medicine', 'biotech', 'bioinformatics', 'ai', 'notes'];
 const COVER_TYPES = ['helix', 'fold', 'image'];
+const COVER_FOCUS = ['center', 'top', 'bottom', 'left', 'right'];   /* which part of a cover stays in view when it is cropped */
+const PICK_MAX = 10;                                                    /* pick: 1..10, the order of the "recommended" strip */
 const IMG_EXT = /\.(jpe?g|png|webp|avif|tiff?)$/i;
 const errors = [], warnings = [];
 const err = (m) => errors.push(m), warn = (m) => warnings.push(m);
@@ -126,6 +129,23 @@ for (const f of dataFiles) {
   normaliseImages(f, d);
   write(path.join(dataOut, f), JSON.stringify(d, null, 2) + '\n');
 }
+/** reading time in minutes, the same way the article page does it (main.js "reading time"): words of the page's own language
+    (Intl.Segmenter, Thai), the visible text of .prose without .refs / .author-card / .ph / .todo, speed = art.wpm in src/data/i18n.json */
+const i18n = readJson(P('src/data/i18n.json')) || {};
+const WPM = Number(i18n.th && i18n.th['art.wpm']) || 200;
+const decodeEntities = (s) => s.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (m, e) => {
+  if (e[0] === '#') { const c = e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10); return Number.isFinite(c) ? String.fromCodePoint(c) : m; }
+  return { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }[e.toLowerCase()];
+});
+function readMinutes(bodyHtml) {
+  const html = bodyHtml.replace(/<div class="ph">[\s\S]*?<\/div>/g, '').replace(/<p class="todo">[\s\S]*?<\/p>/g, '');
+  const plain = decodeEntities(html.replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').trim();     /* the references are rendered apart from the body, so they are not in it */
+  let words;
+  if (typeof Intl !== 'undefined' && Intl.Segmenter) words = Array.from(new Intl.Segmenter('th', { granularity: 'word' }).segment(plain)).filter((s) => s.isWordLike).length;
+  else words = Math.round(plain.replace(/\s/g, '').length / 4);
+  return Math.max(1, Math.round(words / WPM));
+}
+
 const glossary = readJson(P('content/data/glossary.json')) || [];
 const glossaryKeys = new Set(glossary.map((g) => g.key));
 
@@ -202,13 +222,30 @@ for (const f of (fs.existsSync(artDir) ? fs.readdirSync(artDir) : []).filter((x)
     }
     if (o.type === 'image' && String(o.src || '').trim() && !String(o.alt || '').trim()) need(`${f}: covers[${i + 1}] picture has no alt text`);
     if (o.type === 'image' && String(o.src || '').trim() && !String(o.credit || '').trim()) need(`${f}: covers[${i + 1}] picture has no credit`);
+    const focus = String(o.focus ?? '').trim();                    /* optional; empty = center */
+    if (focus && !COVER_FOCUS.includes(focus)) need(`${f}: covers[${i + 1}] focus "${focus}" must be one of ${COVER_FOCUS.join(', ')}`);
+    o.focus = COVER_FOCUS.includes(focus) ? focus : 'center';
     return o;
   });
 
+  /* pick: optional 1..10, the order in the "recommended" strip (duplicates are checked after the loop) */
+  let pick = null;
+  if (d.pick !== undefined && d.pick !== null && String(d.pick).trim() !== '') {
+    const n = typeof d.pick === 'number' ? d.pick : Number(String(d.pick).trim());
+    if (!Number.isInteger(n) || n < 1 || n > PICK_MAX) { if (published) err(`${f}: pick "${d.pick}" must be a whole number from 1 to ${PICK_MAX}`); }
+    else pick = n;
+  }
+
   const env = { slug, published, prefix: '../' };
   const body = md.render(fm.content, env);
-  articles.push({ slug, file: f, fm: d, status, published, title, date, category, covers, body,
+  articles.push({ slug, file: f, fm: d, status, published, title, date, category, covers, body, pick,
     references: Array.isArray(d.references) ? d.references.map(String) : [], env });
+}
+
+const pickOwner = new Map();
+for (const a of articles.filter((x) => x.published && x.pick !== null)) {
+  if (pickOwner.has(a.pick)) err(`pick ${a.pick} is used by both ${pickOwner.get(a.pick)} and ${a.file}: every article in the "recommended" strip needs its own number (1-${PICK_MAX})`);
+  else pickOwner.set(a.pick, a.file);
 }
 
 /* ------------------------------------------------------------------ article pages */
@@ -258,6 +295,7 @@ for (const a of articles) {
   const entry = {
     slug: a.slug, title: a.title, dek: String(a.fm.dek ?? ''), title_en: String(a.fm.title_en ?? ''), dek_en: String(a.fm.dek_en ?? ''),
     category: a.category, date: a.date, covers: a.covers, featured: a.fm.featured === true, status: a.status, has_en: hasEn(a.slug),
+    read_min: readMinutes(a.body), pick: a.pick,
   };
   a.entry = entry;
   const refs = a.references.length
