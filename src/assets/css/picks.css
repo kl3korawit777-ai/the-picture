@@ -1,0 +1,63 @@
+/* The Picture — home page "Editor's picks" strip (picks.js). Colours come from tokens in style.css (--paper, --rank-bg, --hero-*). */
+
+.picks { background: var(--paper); padding-block: 56px 72px; }
+.picks[hidden] { display: none; }
+.picks-inner { max-width: var(--max); margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+@media (max-width: 480px) { .picks-inner { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); } }
+.picks-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 36px; }
+.picks-eyebrow { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; color: var(--muted); }
+.picks-head h2 { margin-top: 4px; font-size: clamp(34px, 5vw, 60px); line-height: 1.1; letter-spacing: -0.01em; }
+.picks-swipe { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; color: var(--muted); flex: none; }
+
+.picks-viewport { position: relative; }
+.picks-track {
+  list-style: none; margin: -8px 0 0; padding: 8px 0 14px;                 /* room for the lift and the shadow of a hovered card */
+  display: grid; grid-auto-flow: column; grid-auto-columns: clamp(250px, 30%, 380px); gap: 32px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.picks-track::-webkit-scrollbar { display: none; }
+@media (prefers-reduced-motion: reduce) { .picks-track { scroll-behavior: auto; } }
+.pick { scroll-snap-align: start; min-width: 0; }
+.pick-link { display: flex; flex-direction: column; height: 100%; background: var(--bg); color: var(--ink); }
+.pick-link:focus-visible { outline-offset: -4px; border-radius: 0; }       /* inside the card: the strip clips anything that sticks out */
+@media (prefers-reduced-motion: no-preference) { .pick-link { transition: transform .25s, box-shadow .25s; } }
+.pick-link:hover { color: var(--ink); transform: translateY(-4px); box-shadow: var(--shadow-card); }
+.pick-media { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--hero-bg); }
+.pick-media img { width: 100%; height: 100%; max-width: none; object-fit: cover; }
+@media (prefers-reduced-motion: no-preference) {
+  .pick-media img { transition: transform .6s ease; }
+  .pick-link:hover .pick-media img { transform: scale(1.04); }
+}
+.pick-media::after { content: ""; position: absolute; inset: auto 0 0; height: 22%; background: linear-gradient(0deg, var(--hero-shade), var(--hero-shade-0)); }
+.pick-rank { position: absolute; z-index: 1; left: 0; bottom: 0; min-width: 64px; height: 64px; padding: 0 18px; display: inline-flex; align-items: center; background: var(--rank-bg); color: var(--hero-ink); font-family: var(--font-display); font-weight: 500; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.pick-body { padding: 26px 28px 32px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.pick-cat { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.pick-title { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.45; text-wrap: pretty; }
+
+/* round arrow buttons at the middle of the pictures (desktop) */
+.picks-next, .picks-prev {
+  position: absolute; z-index: 2; top: var(--btn-top, 40%);
+  width: 60px; height: 60px; border-radius: 999px; border: 1.5px solid var(--hero-ink); background: var(--hero-glass); color: var(--hero-ink);
+  display: inline-flex; align-items: center; justify-content: center; transition: background .2s, transform .15s;
+}
+.picks-next[hidden], .picks-prev[hidden] { display: none; }
+.picks-next { right: 12px; }
+.picks-prev { left: 12px; }
+.picks-next:hover, .picks-prev:hover { background: var(--hero-glass-2); }
+.picks-next:active, .picks-prev:active { transform: scale(.94); }
+.picks-next:focus-visible, .picks-prev:focus-visible { outline-color: var(--hero-ink); outline-offset: 2px; }
+
+/* mobile: cards 78% wide so the edge of the next one shows; swipe instead of buttons */
+@media (max-width: 720px) {
+  .picks { padding-block: 40px 52px; }
+  .picks-head { margin-bottom: 24px; }
+  .picks-swipe { font-size: 16px; }
+  .picks-track { grid-auto-columns: 78%; gap: 16px; }
+  .pick-rank { min-width: 52px; height: 52px; font-size: 28px; padding: 0 14px; }
+  .pick-body { padding: 20px 20px 24px; }
+  .pick-title { font-size: 19px; }
+  .picks-next, .picks-prev { display: none; }
+}
+
+@media print { .picks { display: none; } }

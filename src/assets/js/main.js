@@ -643,6 +643,16 @@
       }));
       if (heroEl && !heroOn) heroEl.hidden = true;
 
+      /* the "Editor's picks" strip (picks.js): by the pick field, else the newest; it needs at least 2 articles */
+      var picksEl = document.getElementById('picks');
+      if (picksEl) {
+        var picksOn = !!(TP.picks && TP.picks.mount(picksEl, posts, {
+          base: base, link: function (p) { return articleLink(p); },
+          cat: function (el, c) { return labelBi(el, 'cat', c); }, title: titleBi
+        }));
+        if (!picksOn) picksEl.hidden = true;
+      }
+
       if (lead && heroOn) {
         lead.textContent = '';                       /* the featured article is in the hero: one h1 on the page */
         if (lead.parentNode) lead.parentNode.classList.add('has-hero');
