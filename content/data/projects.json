@@ -6,8 +6,8 @@
     "desc_en": "A catalogue of every human cell type, with a spider-web network linking the data.",
     "types": ["website"],
     "tags": ["Cell Biology"],
-    "url": "",
-    "github": "",
+    "url": "https://kl3korawit777-ai.github.io/nexus-cells/",
+    "github": "https://github.com/kl3korawit777-ai/nexus-cells",
     "thumb": "Nx"
   },
   {
@@ -17,8 +17,8 @@
     "desc_en": "An educational drug-information website in Thai and English.",
     "types": ["website"],
     "tags": ["Pharmacology"],
-    "url": "",
-    "github": "",
+    "url": "https://kl3korawit777-ai.github.io/drug-info/",
+    "github": "https://github.com/kl3korawit777-ai/drug-info",
     "thumb": "Rx"
   },
   {
@@ -56,13 +56,35 @@
   },
   {
     "slug": "english-roadmap",
-    "name": "English Roadmap",
+    "name": "EngPath",
     "desc_th": "เว็บแอปเรียนภาษาอังกฤษตามเส้นทาง A1 ถึง C1 พร้อมฝึก shadowing",
     "desc_en": "A web app for learning English along an A1 to C1 roadmap, with shadowing practice.",
     "types": ["webapp"],
     "tags": ["Language"],
-    "url": "",
-    "github": "",
+    "url": "https://kl3korawit777-ai.github.io/engpath/",
+    "github": "https://github.com/kl3korawit777-ai/engpath",
     "thumb": "En"
+  },
+  {
+    "slug": "microsearch-2",
+    "name": "Microsearch 2.0",
+    "desc_th": "เว็บไซต์ความรู้เรื่องแบคทีเรีย อาร์เคีย ฟังไจ โพรทิสต์ พืช และสัตว์ สำหรับนักเรียน",
+    "desc_en": "Bacteria, archaea, fungi, protists, plants and animals, explained for students.",
+    "types": ["website"],
+    "tags": ["Microbiology"],
+    "url": "https://kl3korawit777-ai.github.io/microsearch2/",
+    "github": "https://github.com/kl3korawit777-ai/microsearch2",
+    "thumb": "Ms"
+  },
+  {
+    "slug": "subscription-tracker",
+    "name": "Subscription Tracker",
+    "desc_th": "เว็บแอปบันทึกค่าแอปและค่าบริการรายเดือน ดูบนปฏิทิน พร้อมสรุปรายจ่าย",
+    "desc_en": "A web app for recording app and subscription payments on a calendar, with a spending summary.",
+    "types": ["webapp"],
+    "tags": ["Productivity"],
+    "url": "https://kl3korawit777-ai.github.io/subscription-tracker/",
+    "github": "https://github.com/kl3korawit777-ai/subscription-tracker",
+    "thumb": "St"
   }
 ]

@@ -213,6 +213,16 @@ p { margin: 0; }
 .proj-card { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; background: var(--bg); transition: border-color .2s, transform .2s; }
 .proj-card:hover { border-color: var(--line-2); transform: translateY(-2px); color: var(--ink); }
 .proj-thumb { height: 190px; background: var(--surface); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 52px; color: var(--accent); }
+/* project card: Project Hub status + links to the live site and GitHub */
+.proj-status { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600; }
+.proj-status::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+.proj-status.is-active { color: var(--accent); }
+.proj-status.is-done { color: var(--ink); }
+.proj-links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; font-size: 14px; font-weight: 600; }
+.proj-links a { position: relative; z-index: 1; min-height: 32px; display: inline-flex; align-items: center; }
+.proj-web { color: var(--accent); }
+.proj-web:hover { text-decoration: underline; text-underline-offset: 3px; }
+.proj-gh { color: var(--ink-2); }
 .proj-body { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
 .proj-body .name { font-family: var(--font-display); font-weight: 600; font-size: 22px; }
 .proj-body .desc { font-size: 15px; color: var(--muted); line-height: 1.65; }

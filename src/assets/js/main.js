@@ -759,12 +759,24 @@
         (p.tags || []).forEach(function (tg) { tags.appendChild(mk('span', 'tag', tg)); });
         body.appendChild(tags);
 
+        /* status from Project Hub (scripts/hub-sync.mjs), shown above the name */
+        if (p.status && has('proj.status.' + p.status)) body.insertBefore(labelBi(mk('span', 'proj-status is-' + p.status), 'proj.status', p.status), name);
+
+        var links = mk('span', 'proj-links');
+        var web = safeUrl(p.url);
+        if (web) {
+          var w = bk(mk('a', 'proj-web'), 'proj.openShort');
+          w.href = resolveUrl(web);
+          if (isExternal(web)) { w.target = '_blank'; w.rel = 'noopener'; }
+          links.appendChild(w);
+        }
         if (gh) {
           var g = bk(mk('a', 'proj-gh'), 'proj.github');
           g.href = resolveUrl(gh);
           if (isExternal(gh)) { g.target = '_blank'; g.rel = 'noopener'; }
-          body.appendChild(g);
+          links.appendChild(g);
         }
+        if (links.firstChild) body.appendChild(links);
         card.appendChild(body);
         grid.appendChild(card);
       });

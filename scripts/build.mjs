@@ -21,6 +21,7 @@ import matter from 'gray-matter';
 import MarkdownIt from 'markdown-it';
 import sharp from 'sharp';
 import directives, { esc, parseAttrs } from './markdown-directives.mjs';
+import { hubSettings, fetchHubProjects, mergeHub, pageFromTemplate } from './hub-sync.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const P = (...a) => path.join(ROOT, ...a);
@@ -124,10 +125,29 @@ function normaliseImages(file, data) {
   }));
 }
 const dataFiles = fs.existsSync(DATA_DIR) ? fs.readdirSync(DATA_DIR).filter((f) => f.endsWith('.json')) : [];
+const hubPages = [];                                             /* project pages made for Hub-only projects (for the sitemap) */
 for (const f of dataFiles) {
-  const d = readJson(path.join(DATA_DIR, f)); if (d === null) continue;
+  let d = readJson(path.join(DATA_DIR, f)); if (d === null) continue;
   normaliseImages(f, d);
+  if (f === 'projects.json' && Array.isArray(d)) d = await withHub(d);
   write(path.join(dataOut, f), JSON.stringify(d, null, 2) + '\n');
+}
+/** projects.json + the projects tagged "portfolio" in Project Hub (scripts/hub-sync.mjs); never fails the build */
+async function withHub(local) {
+  const got = await fetchHubProjects(hubSettings(P('scripts/hub.config.json')));
+  if (!got.list) { warn(`Project Hub not used (${got.why}): project cards come from content/data/projects.json only`); return local; }
+  const { list, added, matched } = mergeHub(local, got.list);
+  console.log(`Project Hub: ${got.list.length} public project(s), ${matched} matched a card, ${added.length} new card(s)`);
+  const tpl = P('src/projects/_template.html');
+  for (const p of added) {
+    const out = path.join(OUT, 'projects', p.slug + '.html');
+    if (fs.existsSync(out)) continue;                             /* a hand-written page in src/projects wins */
+    if (!fs.existsSync(tpl)) { warn(`Project Hub: no src/projects/_template.html, ${p.slug} has no page`); continue; }
+    write(out, pageFromTemplate(fs.readFileSync(tpl, 'utf8'), p));
+    hubPages.push(`projects/${p.slug}.html`);
+    warn(`Project Hub: "${p.name}" has no card in content/data/projects.json; made projects/${p.slug}.html from the template (its content is [ ] placeholders)`);
+  }
+  return list;
 }
 /** reading time in minutes, the same way the article page does it (main.js "reading time"): words of the page's own language
     (Intl.Segmenter, Thai), the visible text of .prose without .refs / .author-card / .ph / .todo, speed = art.wpm in src/data/i18n.json */
@@ -321,6 +341,7 @@ if (SITE) {
   const pages = ['', 'projects.html', 'portfolio.html', 'about.html'];
   const projDir = P('src/projects');
   if (fs.existsSync(projDir)) for (const f of fs.readdirSync(projDir).filter((x) => x.endsWith('.html') && !x.startsWith('_')).sort()) pages.push('projects/' + f);
+  for (const h of hubPages) if (!pages.includes(h)) pages.push(h);
   for (const a of published) pages.push(`articles/${a.slug}.html`);
   write(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     pages.map((p) => `  <url><loc>${esc(`${SITE}/${p}`)}</loc></url>`).join('\n') + '\n</urlset>\n');

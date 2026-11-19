@@ -1,5 +1,5 @@
 # Build the site (scripts/build.mjs) and deploy _site/ to GitHub Pages.
-# Runs on every push to main (every save in Pages CMS is a push) and by hand (Actions tab -> Run workflow).
+# Runs on every push to main (every save in Pages CMS is a push), once a day (Project Hub data), and by hand (Actions tab -> Run workflow).
 # One-time setup: repo Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
 name: Build and deploy
 
@@ -7,6 +7,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # once a day, so changes made in Project Hub (status, links of projects tagged "portfolio") reach the projects page
+  schedule:
+    - cron: '23 19 * * *'   # 02:23 Bangkok time
 
 permissions:
   contents: read

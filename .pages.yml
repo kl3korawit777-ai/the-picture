@@ -313,11 +313,15 @@ content:
       - name: url
         label: ลิงก์เว็บจริง
         type: string
-        description: "https://... เว้นว่างได้ (ปุ่มจะขึ้นว่า 'เร็วๆ นี้')"
+        description: "https://... เว้นว่างได้ (ปุ่มจะขึ้นว่า 'เร็วๆ นี้') ถ้าโปรเจกต์นี้ติดแท็ก portfolio ใน Project Hub เว็บจะใช้ลิงก์จาก Hub แทน"
       - name: github
         label: ลิงก์ GitHub
         type: string
-        description: "https://github.com/... เว้นว่างได้"
+        description: "https://github.com/... เว้นว่างได้ ถ้าโปรเจกต์นี้ติดแท็ก portfolio ใน Project Hub เว็บจะใช้ลิงก์จาก Hub แทน"
+      - name: hub
+        label: slug ใน Project Hub
+        type: string
+        description: "ไม่บังคับ ใส่เมื่อลิงก์ GitHub/เว็บที่นี่ไม่ตรงกับใน Hub เว็บจะจับคู่โปรเจกต์ด้วย slug นี้ (ปกติจับคู่จากลิงก์ GitHub ให้เอง)"
       - name: thumb
         label: อักษรย่อบนการ์ด
         type: string
